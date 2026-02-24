@@ -2,9 +2,9 @@ services:
   postgres:
     image: postgres:18
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${RECT_APP_DB_USER}
+      POSTGRES_PASSWORD: ${REACT_APP_DB_PASSWORD}
+      POSTGRES_DB: ${REACT_APP_DB_NAME}
     ports:
       - "5432:5432"
     volumes:
