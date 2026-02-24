@@ -1,13 +1,13 @@
-import { JwtPayload } from "jwt-decode";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 import { createContext } from "react";
 
-const storage = sessionStorage.getItem('user');
-const user = storage ? JSON.parse(storage) : null;
-export const UserContext = createContext<TUserContext>(user);
-export type TUserContext = JwtPayload & {
-  family_name: string,
-  given_name: string,
-  email: string,
-  email_verified: boolean,
+const userToken = sessionStorage.getItem('userToken');
+const user = userToken ? jwtDecode(userToken) : null;
+export const UserContext = createContext<TUserContext>(user as TUserContext);
+export type TUserContext = null | (JwtPayload & {
+  family_name?: string,
+  given_name?: string,
+  email?: string,
+  email_verified?: boolean,
   setUserState: (data: TUserContext) => void
-};
+});
