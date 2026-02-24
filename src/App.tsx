@@ -3,7 +3,7 @@ import './App.css';
 import { useState, useContext } from 'react';
 import { SSOGoogleLoginButton } from './components/SSOGoogleLoginButton';
 import { TUserContext, UserContext } from './state/UserContext';
-let count = 0;
+
 function App() {
   const userContext = useContext(UserContext);
   const [ user, setUserState ] = useState<TUserContext>(userContext);
