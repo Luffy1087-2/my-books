@@ -6,11 +6,14 @@ import { TUserContext, UserContext } from "../state/UserContext";
 const clientId = process.env.REACT_APP_SSO_CLIENT_ID ?? '';
 export function SSOGoogleLoginButton() {
   const userContext = useContext(UserContext);
+  if (Object.keys(userContext).length > 1)
+    return null;
+
   const onSuccess = (res: CredentialResponse) => {
     const { credential } = res;
     if (!credential) throw new TypeError('login failed');
     const sessionData = jwtDecode(credential) satisfies TUserContext;
-    localStorage.setItem('user', JSON.stringify(sessionData));
+    sessionStorage.setItem('user', JSON.stringify(sessionData));
     userContext?.setUserState({...sessionData, setUserState: userContext.setUserState})
   };
 

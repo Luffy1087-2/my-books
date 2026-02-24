@@ -1,7 +1,7 @@
 import { JwtPayload } from "jwt-decode";
 import { createContext } from "react";
 
-const storage = localStorage.getItem('user');
+const storage = sessionStorage.getItem('user');
 const user = storage ? JSON.parse(storage) : null;
 export const UserContext = createContext<TUserContext>(user);
 export type TUserContext = JwtPayload & {
