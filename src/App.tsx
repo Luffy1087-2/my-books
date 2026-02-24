@@ -12,7 +12,7 @@ function App() {
     <UserContext.Provider value={{...user, setUserState}}>
       <div className="App">
         <SSOGoogleLoginButton />
-        {user ? <h1>{user.given_name}</h1> : ''}
+        {user && <h1>{user.given_name}</h1>}
       </div>
     </UserContext.Provider>
   );

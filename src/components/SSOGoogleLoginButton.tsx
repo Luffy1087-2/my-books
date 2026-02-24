@@ -21,7 +21,7 @@ export function SSOGoogleLoginButton() {
   };
 
   const onError = () => {
-    console.log('login onError');
+    userContext?.setUserState(null);
   };
 
   return (
