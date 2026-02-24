@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { TUserContext, UserContext } from "../state/UserContext";
 
 const clientId = process.env.REACT_APP_SSO_CLIENT_ID ?? '';
-export function LoginGoogleButton() {
+export function SSOGoogleLoginButton() {
   const userContext = useContext(UserContext);
   const onSuccess = (res: CredentialResponse) => {
     const { credential } = res;

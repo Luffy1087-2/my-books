@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState, useContext } from 'react';
-import { LoginGoogleButton } from './components/LoginGoogleButton';
+import { SSOGoogleLoginButton } from './components/SSOGoogleLoginButton';
 import { TUserContext, UserContext } from './state/UserContext';
 let count = 0;
 function App() {
@@ -11,7 +11,7 @@ function App() {
   return (
     <UserContext.Provider value={{...user, setUserState}}>
       <div className="App">
-        <LoginGoogleButton />
+        <SSOGoogleLoginButton />
         {user ? <h1>{user.given_name}</h1> : ''}
       </div>
     </UserContext.Provider>
