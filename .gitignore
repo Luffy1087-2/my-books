@@ -25,3 +25,4 @@ yarn-error.log*
 # customs
 .env
 src/api/node_modules
+src/api/dist
