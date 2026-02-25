@@ -1,0 +1,12 @@
+{
+  "name": "my-books-api",
+  "version": "1.0.0",
+  "description": "The apis for handling books server side",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "test": "npm test"
+  }
+}
