@@ -1,0 +1,24 @@
+{
+  "name": "@my-books/api",
+  "version": "1.0.0",
+  "description": "The apis for handling books server side",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc --build --verbose",
+    "start": "node ./dist/index.js",
+    "test": "npm test"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "@my-books/core": "file:../core"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.25",
+    "@types/jsonwebtoken": "^9.0.10",
+    "typescript": "^5.9.3"
+  }
+}
