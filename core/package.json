@@ -1,0 +1,19 @@
+{
+  "name": "@my-books/core",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "fferdico",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "crypto-js": "^4.2.0"
+  }
+}
