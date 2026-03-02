@@ -2,8 +2,8 @@ import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from "@react-oau
 import { jwtDecode } from "jwt-decode";
 import { useContext } from "react";
 import { TUserContext, UserContext } from "../state/UserContext";
+import { encryptToken, CLIENT_ID } from '@my-books/core';
 
-const clientId = process.env.REACT_APP_SSO_CLIENT_ID ?? '';
 export function SSOGoogleLoginButton() {
   const userContext = useContext(UserContext);
   if (userContext && Object.keys(userContext).length > 1) {
@@ -12,11 +12,11 @@ export function SSOGoogleLoginButton() {
     return null;
   }
 
-  const onSuccess = (res: CredentialResponse) => {
+  const onSuccess = async (res: CredentialResponse) => {
     const { credential } = res;
     if (!credential) throw new TypeError('login failed');
     const sessionData = jwtDecode(credential) satisfies TUserContext;
-    sessionStorage.setItem('userToken', JSON.stringify(credential));
+    sessionStorage.setItem('userToken', encryptToken(JSON.stringify(sessionData)));
     userContext?.setUserState({...sessionData, setUserState: userContext.setUserState})
   };
 
@@ -25,7 +25,7 @@ export function SSOGoogleLoginButton() {
   };
 
   return (
-    <GoogleOAuthProvider clientId={clientId}>
+    <GoogleOAuthProvider clientId={CLIENT_ID}>
       <GoogleLogin
         onSuccess={onSuccess}
         onError={onError}

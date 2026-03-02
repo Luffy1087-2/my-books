@@ -23,7 +23,8 @@
   "include": [
     "src"
   ],
-  "exclude": [
-    "src/api"
+  "references": [
+    {"path": "./core"},
+    {"path": "./api"}
   ]
 }

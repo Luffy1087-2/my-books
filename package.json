@@ -12,6 +12,7 @@
     "@types/node": "^16.18.126",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "crypto-js": "^4.2.0",
     "jwt-decode": "^4.0.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
@@ -24,6 +25,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "build:all": "npm run build --workspaces",
     "docker:build": "docker-compose up -d --build",
     "docker:start": "docker-compose down && docker-compose up -d",
     "docker:stop": "docker-compose down"
@@ -45,5 +47,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^4.2.2"
+  },
+  "workspaces":[
+    "api",
+    "core"
+  ]
 }

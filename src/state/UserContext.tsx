@@ -1,8 +1,9 @@
-import { jwtDecode, JwtPayload } from "jwt-decode";
+import { JwtPayload } from "jwt-decode";
 import { createContext } from "react";
+import { decryptJsonTokenData } from "@my-books/core";
 
 const userToken = sessionStorage.getItem('userToken');
-const user = userToken ? jwtDecode(userToken) : null;
+const user = userToken ? decryptJsonTokenData(userToken) : null;
 export const UserContext = createContext<TUserContext>(user as TUserContext);
 export type TUserContext = null | (JwtPayload & {
   family_name?: string,
