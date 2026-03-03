@@ -12,9 +12,10 @@
     "test": "npm test"
   },
   "dependencies": {
+    "@my-books/core": "file:../core",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "@my-books/core": "file:../core"
+    "pg": "^8.19.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.25",
