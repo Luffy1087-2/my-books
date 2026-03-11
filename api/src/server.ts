@@ -2,11 +2,8 @@
 import { type Express }  from 'express';
 import express from 'express';
 import {decryptJsonTokenData} from '@my-books/core';
+import { ValidUser } from './types/user';
 
-type ValidUser = {
-  sub: string,
-  given_name: string
-}
 const isValidUser = (user: ValidUser) => {
   return user &&
     typeof user.sub === 'string' &&
