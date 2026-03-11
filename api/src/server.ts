@@ -4,13 +4,15 @@ import express from 'express';
 import {decryptJsonTokenData} from '@my-books/core';
 
 const app: Express = express();
+app.use(express.json());
 app.use((req, res, next) => {
   const tokenFromHeader = req.headers["authorization"];
-  if (!tokenFromHeader) res.status(400).json('authorization header is not present');
+  if (!tokenFromHeader) return res.status(400).json('authorization header is not present');
   const token = tokenFromHeader!.startsWith('Bearer ') ? tokenFromHeader!.toString().split(' ')[1] : undefined;
-  if (typeof token !== 'string') res.status(400).json('token should be present in the header');
+  if (typeof token !== 'string') return res.status(400).json('token should be present in the header');
   const decodedData = decryptJsonTokenData(token!);
-  // res.locals.user = decodedData;
+  if (!decodedData) return res.status(403).json('user data is not accessible');
+  res.locals.user = decodedData;
   next();
 });
 

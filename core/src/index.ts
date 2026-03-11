@@ -10,10 +10,13 @@ export function encryptToken(dataString: string): string {
   return CryptoJS.AES.encrypt(dataString, SECRET_KEY).toString();
 };
 
-export function decryptJsonTokenData(data: string): object {
-  const bytes = CryptoJS.AES.decrypt(data, SECRET_KEY);
-  const bsString = bytes.toString(CryptoJS.enc.Utf8);
-  const json = JSON.parse(bsString);
-  
-  return json;
+export function decryptJsonTokenData(data: string): object | null {
+  try {
+    const bytes = CryptoJS.AES.decrypt(data, SECRET_KEY);
+    const bsString = bytes.toString(CryptoJS.enc.Utf8);
+    const json = JSON.parse(bsString);
+    return json;
+  } catch {
+    return null;
+  }
 };

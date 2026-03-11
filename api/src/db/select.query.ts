@@ -31,11 +31,11 @@ export default class QuerySelect {
     return this;
   }
 
-  public withWhere(condition: TWhereCondition) {
+  public withWhere(condition: TWhereCondition): void {
     this.query.where.push(condition);
   };
 
-  public withOrderBy(orderBy: TOrderBy) {
+  public withOrderBy(orderBy: TOrderBy): void {
     this.query.orderBy = orderBy;
   }
 
@@ -51,11 +51,11 @@ export default class QuerySelect {
     return select;
   }
 
-  private withTable(table: string) {
+  private withTable(table: string): void {
     this.query.from = table;
   }
 
-  private buildWhere(select: string, query: TQuerySelect) {
+  private buildWhere(select: string, query: TQuerySelect): string {
     select += select.concat(' ', 'WHERE');
     for (let i = 0; i < query.where.length; i++) {
       const where = query.where[i];
