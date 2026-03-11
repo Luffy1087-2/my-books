@@ -11,7 +11,7 @@ app.use((req, res, next) => {
   const token = tokenFromHeader!.startsWith('Bearer ') ? tokenFromHeader!.toString().split(' ')[1] : undefined;
   if (typeof token !== 'string') return res.status(400).json('token should be present in the header');
   const decodedData = decryptJsonTokenData(token!);
-  if (!decodedData) return res.status(403).json('user data is not accessible');
+  if (!decodedData) return res.status(403).json('user data is not wrong');
   res.locals.user = decodedData;
   next();
 });

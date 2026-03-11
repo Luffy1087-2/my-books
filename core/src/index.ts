@@ -1,3 +1,5 @@
+import CryptoJS from 'crypto-js';
+
 export const CLIENT_ID = process.env.REACT_APP_SSO_CLIENT_ID as string;
 export const SECRET_KEY = process.env.REACT_APP_SSO_CLIENT_SECRET as string;
 export const DB_USER = process.env.REACT_APP_DB_USER as string;
