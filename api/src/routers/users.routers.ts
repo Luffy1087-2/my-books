@@ -47,7 +47,7 @@ async function insertUser(user: ValidUser, isAdmin: boolean) {
  try {
   const query = new QueryInsert('users')
     .withFields('id', 'name', 'email', 'u_role')
-    .withValues(user.sub, user.given_name, user.email, isAdmin ? '1' : '0')
+    .withValues(user.sub, user.given_name, user.email, Number(isAdmin).toString())
     .withReturning('id', 'name', 'email', 'u_role')
     .build();
   const data = await DbClient.query(query);
