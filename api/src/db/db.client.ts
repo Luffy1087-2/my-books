@@ -1,15 +1,17 @@
 import {Pool} from 'pg';
 import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER } from '@my-books/core';
 
-export default class Db {
+export default class DbClient {
   private static pool: Pool | undefined;
 
   public static connect() {
     this.pool = this.pool ?? this.createPool();
+
+    return DbClient;
   }
 
   public static async query(query: string) {
-    await this.pool?.query(query);
+    return await this.pool?.query(query);
   }
 
   private static createPool(): Pool {
