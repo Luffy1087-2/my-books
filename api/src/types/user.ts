@@ -1,4 +1,5 @@
 export type ValidUser = {
   sub: string,
-  given_name: string
+  given_name: string,
+  email: string
 }

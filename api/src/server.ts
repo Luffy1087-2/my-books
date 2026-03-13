@@ -4,7 +4,7 @@ import express from 'express';
 import {decryptJsonTokenData} from '@my-books/core';
 import { ValidUser } from './types/user';
 
-const isValidUser = (user: ValidUser) => {
+const isValidUser = (user: ValidUser): boolean => {
   return user &&
     typeof user.sub === 'string' &&
     /^\d+$/.test(user.sub) &&

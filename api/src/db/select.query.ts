@@ -1,58 +1,60 @@
-import { TOperator } from "../types/operators";
-
-type TQuerySelect =  { 
-  fields?: string[],
-  from?: string,
-  where: TWhereCondition[],
-  union?: TQuerySelect,
-  orderBy?: TOrderBy
-};
-
-type TOrderBy = {field: string, direction: 'ASC' | 'DESC'};
-
-type TWhereCondition = {
-  lOperand: string | TQuerySelect,
-  rOperand: string | TQuerySelect,
-  operator: TOperator,
-  rLogicOperand: string,
-};
+import { TOrderBy, TQuerySelect, TWhereCondition } from "../types/querys";
 
 export default class QuerySelect {
   private readonly query: TQuerySelect;
 
   constructor(tableName: string) {
-    this.query = { where: [] };
+    this.query = { where: [], fields: undefined};
     this.withTable(tableName);
   }
 
-  public withFields(fields: string[]) {
+  public withFields(...fields: string[] | TQuerySelect[]): this {
     this.query.fields = fields;
 
     return this;
   }
 
-  public withWhere(condition: TWhereCondition): void {
+  public withWhere(condition: TWhereCondition): this {
     this.query.where.push(condition);
+
+    return this;
   };
 
-  public withOrderBy(orderBy: TOrderBy): void {
+  public withOrderBy(orderBy: TOrderBy): this {
     this.query.orderBy = orderBy;
+
+    return this;
   }
 
-  public build(rQuery: TQuerySelect | undefined): string  {
+  public withLimit(limit: number): this {
+    this.query.limit = limit;
+
+    return this;
+  }
+
+  public build(rQuery: TQuerySelect | undefined | void): string  {
     const query = rQuery ?? this.query;
-    const fieldsString = query.fields?.reduce((p: string, c: string) => p = p.concat(c,','), '').slice(0, -1);
-    if (!fieldsString) throw new TypeError('fieldsString should be defined');
+    const fieldsString = this.getFieldsOrSubQuery(rQuery?.fields);
     let select = 'SELECT'
       .concat(' ', fieldsString)
       .concat(' ', query.from!);
     select += !query.where.length ? this.buildWhere(select, query) : '';
     select += query.orderBy ? this.buildOrderBy(select, query) : '';
+    select += query.limit ? ' LIMIT ' + query.limit : '';
+    select += query.subQueryName ? ' AS ' + query.subQueryName : '';
     return select;
   }
 
   private withTable(table: string): void {
     this.query.from = table;
+  }
+
+  private getFieldsOrSubQuery(fieldsOrSubQuery: string[] | TQuerySelect[] | undefined): string {
+    if (!fieldsOrSubQuery) throw new TypeError('rQuery should not be empty');
+    if (fieldsOrSubQuery.every((v) => typeof v === 'string'))
+      return fieldsOrSubQuery.reduce((p: string, c: string) => p = p.concat(c,','), '').slice(0, -1);
+
+    return '( ' + this.build(fieldsOrSubQuery[0] as TQuerySelect) + ' ) ';
   }
 
   private buildWhere(select: string, query: TQuerySelect): string {
@@ -68,13 +70,13 @@ export default class QuerySelect {
     return select;
   }
 
-  private getOperandOrSubQuery(where: string | TQuerySelect) {
+  private getOperandOrSubQuery(where: string | TQuerySelect): string {
     if (typeof where === 'string') return where;
     if (!Array.isArray(where) && typeof where === 'object') return `( ${this.build(where)}) `;
     throw new TypeError('operand should be a string or an object');
   }
 
-  private buildOrderBy(select: string, query: TQuerySelect) {
+  private buildOrderBy(select: string, query: TQuerySelect): string {
     select += select.concat(' ORDER BY');
     select += select.concat(' ', query.orderBy!.field);
     select += select.concat(' ', query.orderBy!.direction);
