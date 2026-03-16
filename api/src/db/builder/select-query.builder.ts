@@ -1,6 +1,6 @@
-import { TOrderBy, TQuerySelect, TWhereCondition } from "../types/querys";
+import { TOrderBy, TQuerySelect, TWhereCondition } from "../../types/querys";
 
-export default class QuerySelect {
+export default class SelectQueryBuilder {
   private readonly query: TQuerySelect;
 
   constructor(tableName: string) {
@@ -28,6 +28,12 @@ export default class QuerySelect {
 
   public withLimit(limit: number): this {
     this.query.limit = limit;
+
+    return this;
+  }
+
+  public withSubQueryName(name: string): this {
+    this.query.subQueryName = name;
 
     return this;
   }

@@ -1,7 +1,8 @@
-import { TQueryInsert } from "../types/querys";
+import { TQueryInsert as TInsertQuery } from "../../types/querys";
+import { arrayToQueryValues } from "../../utils/helper";
 
-export default class QueryInsert {
-  private readonly query: TQueryInsert;
+export default class InsertQueryBuilder {
+  private readonly query: TInsertQuery;
 
   constructor(tableName: string) {
     this.query = { 
@@ -31,12 +32,12 @@ export default class QueryInsert {
   }
 
   public build(): string  {
-    const fieldsString = this.query.fields.reduce((p: string, c: string) => p = p.concat(c, ', '), '').slice(0, -1);
-    let select = 'INSERT INTO'
+    const fieldsString = arrayToQueryValues(this.query.fields);
+    const select = 'INSERT INTO'
       .concat(' ', this.query.table)
       .concat(' ( ', fieldsString, ' )')
-      .concat(' VALUES (', this.query.values.reduce((p: string, c: string) => p = p.concat('\'' + c + '\'', ', '), '').slice(0, -1), ' )')
-      .concat(' RETURNING ', this.query.returning.reduce((p: string, c: string) => p = p.concat(c, ', '), '').slice(0, -1))
+      .concat(' VALUES (', arrayToQueryValues(this.query.values, true), ' )')
+      .concat(' RETURNING ', arrayToQueryValues(this.query.returning))
     return select;
   }
 
