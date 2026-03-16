@@ -1,11 +1,11 @@
 import { Router } from "express";
-import SelectQueryBuilder from "../db/builder/select-query.builder";
-import DbClient from "../db/db.client";
 import { Book } from "../types/tables";
 import { cleanParam } from "../utils/helper";
+import SelectQueryBuilder from "../db/builder/select-query.builder";
+import InsertQueryBuilder from "../db/builder/insert-query.builder";
+import DbService from "../services/db.service";
 
 const booksRouters: Router = Router();
-
 booksRouters.get('/getBooks', async (req, res) => {
   const { author, title } = req.query;
   const books = await getBooks(
@@ -26,16 +26,24 @@ booksRouters.get('/getBook/:id', async (req, res) => {
       rOperand: id.toString()
     })
     .build();
-  const book = await DbClient.query(select);
+  const book = await DbService.query(select);
   if (book.rowCount !== 1) return res.status(404).json({msg: 'book is not found'});
   res.status(200).json(book.rows[0]);
 });
 
-booksRouters.post('/addBook', (req, res) => {
-  // call the service to take data from the db
-  // upload file & put it into the db
-  // return it;
-  // check se il libro esiste by author & title
+booksRouters.post('/addBook', async (req, res) => {
+  try {
+    const { title, author, description, img } = req.body;
+    const insert = new InsertQueryBuilder('books')
+      .withFields('title', 'author', 'description', 'img')
+      .withValues(title, author, description, img)
+      .withReturning('id', 'title', 'author', 'description', 'img')
+      .build();
+    const book = await DbService.query(insert);
+    res.status(201).json(book.rows[0]);
+  } catch(e: any) {
+    res.status(500).json({msg: 'error adding the book'});
+  }
 });
 
 
@@ -56,7 +64,7 @@ async function getBooks(author?: string, title?: string): Promise<Book[]> {
         rOperand: `%${title!.toUpperCase()}%`,
       })
   }
-  const data = await DbClient.query(select.build());
+  const data = await DbService.query(select.build());
   return data.rows as Book[];
 }
 

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { ValidUser } from "../types/user";
-import DbClient from "../db/db.client";
+import DbService from "../services/db.service";
 import SelectQueryBuilder from "../db/builder/select-query.builder";
 import InsertQueryBuilder from "../db/builder/insert-query.builder";
 
@@ -17,7 +17,7 @@ usersRouters.get('/getUserOrInsert', async (req, res) => {
         rOperand: user.sub
       })
       .build();
-    const data = await DbClient.query(select);
+    const data = await DbService.query(select);
     if (data?.rowCount === 1) {
       return res.status(200).json(data!.rows[0]);
     }
@@ -35,7 +35,7 @@ async function isUsersTableEmpty(): Promise<boolean> {
       .withFields('COUNT(*)')
       .withLimit(1)
       .build();
-    const data = await DbClient.query(select);
+    const data = await DbService.query(select);
     
     return data?.rowCount == 0;
   } catch(e: any) {
@@ -50,7 +50,7 @@ async function insertUser(user: ValidUser, isAdmin: boolean) {
     .withValues(user.sub, user.given_name, user.email, Number(isAdmin).toString())
     .withReturning('id', 'name', 'email', 'u_role')
     .build();
-  const data = await DbClient.query(query);
+  const data = await DbService.query(query);
   return data?.rows[0];
  } catch(e: any) {
   throw new Error('insertUser raises the error: ' + e.message);
