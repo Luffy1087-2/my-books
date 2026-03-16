@@ -44,5 +44,6 @@ export type TOperator =
   | '~'
   | '<<'
   | '>>'
+
   // Limit Clause
   | 'LIMIT';
