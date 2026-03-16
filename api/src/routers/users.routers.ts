@@ -1,14 +1,14 @@
 import { Router } from "express";
 import { ValidUser } from "../types/user";
 import DbClient from "../db/db.client";
-import QuerySelect from "../db/select.query";
-import QueryInsert from "../db/insert.query";
+import SelectQueryBuilder from "../db/builder/select-query.builder";
+import InsertQueryBuilder from "../db/builder/insert-query.builder";
 
 const usersRouters: Router = Router();
 usersRouters.get('/getUserOrInsert', async (req, res) => {
   try {
     const user: ValidUser = res.locals.user;
-    const query = new QuerySelect('users');
+    const query = new SelectQueryBuilder('users');
     const select = query
       .withFields('id', 'name', 'email', 'u_role')
       .withWhere({
@@ -17,20 +17,20 @@ usersRouters.get('/getUserOrInsert', async (req, res) => {
         rOperand: user.sub
       })
       .build();
-    const data = await DbClient.connect().query(select);
+    const data = await DbClient.query(select);
     if (data?.rowCount === 1) {
       return res.status(200).json(data!.rows[0]);
     }
     const iData = await insertUser(user, await isUsersTableEmpty());
     return res.status(201).json(iData);
   } catch(e: any) {
-    return res.status(500).json(e.message);
+    return res.status(500).json({msg: e.message});
   }
 });
 
 async function isUsersTableEmpty(): Promise<boolean> {
   try {
-    const query = new QuerySelect('users');
+    const query = new SelectQueryBuilder('users');
     const select = query
       .withFields('COUNT(*)')
       .withLimit(1)
@@ -45,7 +45,7 @@ async function isUsersTableEmpty(): Promise<boolean> {
 
 async function insertUser(user: ValidUser, isAdmin: boolean) {
  try {
-  const query = new QueryInsert('users')
+  const query = new InsertQueryBuilder('users')
     .withFields('id', 'name', 'email', 'u_role')
     .withValues(user.sub, user.given_name, user.email, Number(isAdmin).toString())
     .withReturning('id', 'name', 'email', 'u_role')
@@ -53,7 +53,7 @@ async function insertUser(user: ValidUser, isAdmin: boolean) {
   const data = await DbClient.query(query);
   return data?.rows[0];
  } catch(e: any) {
-  throw new Error('insertUser raines the error: ' + e.message);
+  throw new Error('insertUser raises the error: ' + e.message);
  }
 }
 
