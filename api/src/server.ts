@@ -3,6 +3,9 @@ import { type Express }  from 'express';
 import express from 'express';
 import {decryptJsonTokenData} from '@my-books/core';
 import { ValidUser } from './types/user';
+import usersRouters from './routers/users.routers';
+import booksRouters from './routers/books.routers';
+import commentsRouters from './routers/comments.routers';
 
 const isValidUser = (user: ValidUser): boolean => {
   return user &&
@@ -23,5 +26,8 @@ app.use((req, res, next) => {
   res.locals.user = decodedData;
   next();
 });
+app.use(usersRouters);
+app.use(booksRouters);
+app.use(commentsRouters);
 
 export default app;

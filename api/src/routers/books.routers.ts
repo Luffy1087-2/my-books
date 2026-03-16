@@ -46,7 +46,6 @@ booksRouters.post('/addBook', async (req, res) => {
   }
 });
 
-
 async function getBooks(author?: string, title?: string): Promise<Book[]> {
   const select = new SelectQueryBuilder('books')
     .withFields('id', 'title', 'author', 'description', 'img')
