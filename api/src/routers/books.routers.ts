@@ -40,8 +40,8 @@ booksRouters.get('/books/user/:userId', async (req, res) => {
 });
 
 booksRouters.get('/books/filter/:author/:title', async (req, res) => {
-  const author = req.params.author;
-  const title = req.params.title;
+  const author = cleanParam(req.params.author);
+  const title = cleanParam(req.params.title);
   const books = await getFilteredBooksByAuthorOrTitle(author, title);
   if (books.length === 0) return res.status(404).json({msg: 'user have no books'});
   res.status(200).json(books);
