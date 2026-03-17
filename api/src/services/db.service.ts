@@ -4,8 +4,8 @@ import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER } from '@my-books/core'
 export default class DbService {
   private static pool: Pool | undefined;
 
-  public static async query(query: string) {
-    return await this.connect().query(query);
+  public static async query(query: string, values: any[] | undefined = undefined) {
+    return await this.connect().query(query, values);
   }
 
   private static connect(): Pool {
