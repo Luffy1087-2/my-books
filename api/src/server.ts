@@ -7,8 +7,8 @@ import usersRouters from './routers/users.routers';
 import booksRouters from './routers/books.routers';
 import commentsRouters from './routers/comments.routers';
 
-const isValidUser = (user: ValidUser): boolean => {
-  return user &&
+const isValidUser = (user: ValidUser | null): boolean => {
+  return user !== null &&
     typeof user.sub === 'string' &&
     /^\d+$/.test(user.sub) &&
     typeof user.given_name === 'string' &&
@@ -21,8 +21,8 @@ app.use((req, res, next) => {
   if (!tokenFromHeader) return res.status(400).json('authorization header is not present');
   const token = tokenFromHeader!.startsWith('Bearer ') ? tokenFromHeader!.toString().split(' ')[1] : undefined;
   if (typeof token !== 'string') return res.status(400).json('token should be present in the header');
-  const decodedData = decryptJsonTokenData(token!);
-  if (!decodedData || !isValidUser(decodedData as ValidUser)) return res.status(403).json('user data is not wrong');
+  const decodedData = decryptJsonTokenData<ValidUser>(token!);
+  if (!isValidUser(decodedData)) return res.status(403).json('user data is not wrong');
   res.locals.user = decodedData;
   next();
 });
