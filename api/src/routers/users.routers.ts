@@ -5,7 +5,7 @@ import SelectQueryBuilder from "../db/builder/select-query.builder";
 import InsertQueryBuilder from "../db/builder/insert-query.builder";
 
 const usersRouters: Router = Router();
-usersRouters.get('/getUserOrInsert', async (req, res) => {
+usersRouters.get('/user/getOrInsert', async (req, res) => {
   try {
     const user: ValidUser = res.locals.user;
     const query = new SelectQueryBuilder('users');
