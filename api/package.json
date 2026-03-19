@@ -12,8 +12,10 @@
     "test": "npm test"
   },
   "dependencies": {
+    "@apollo/server": "^5.4.0",
     "@my-books/core": "file:../core",
     "express": "^5.2.1",
+    "graphql": "^16.13.1",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.1.1",
     "pg": "^8.19.0"
