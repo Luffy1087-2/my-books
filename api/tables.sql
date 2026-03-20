@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS public.books (
     title text NOT NULL,
     author text NOT NULL,
     description text NOT NULL,
-    img bytea,
+    image bytea,
     "userId" bigint
 );
 ALTER TABLE public.books OWNER TO root;
