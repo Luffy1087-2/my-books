@@ -1,4 +1,4 @@
-import { TOperator } from "./operators";
+import { TOperator } from "./db.types";
 
 export type TQuerySelect =  { 
   fields: string[] | TQuerySelect[] | undefined,
