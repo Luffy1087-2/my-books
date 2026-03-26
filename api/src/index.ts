@@ -1,7 +1,7 @@
 'use strict';
 import {ApolloServer} from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
-import { typeDefs } from './graphql/typeDefs.ql';
+import { typeDefs } from './graphql/typeDefs.gql';
 import { getUserTokenHandler } from './handlers/core.handler';
 
 const server = new ApolloServer({typeDefs, resolvers: {}});
