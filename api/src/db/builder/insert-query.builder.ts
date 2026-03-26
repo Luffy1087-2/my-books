@@ -1,4 +1,4 @@
-import { TQueryInsert as TInsertQuery } from "../../types/querys";
+import { TQueryInsert as TInsertQuery } from "../../types/builder.types";
 import { arrayToQueryValues } from "../../utils/helper";
 
 export default class InsertQueryBuilder {

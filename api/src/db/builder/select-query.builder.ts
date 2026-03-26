@@ -1,4 +1,4 @@
-import { TOrderBy, TQuerySelect, TWhereCondition } from "../../types/querys";
+import { TOrderBy, TQuerySelect, TWhereCondition } from "../../types/builder.types";
 
 export default class SelectQueryBuilder {
   private readonly query: TQuerySelect;
