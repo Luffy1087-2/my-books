@@ -1,6 +1,15 @@
-import app from "./server.js";
+'use strict';
+import {ApolloServer} from '@apollo/server';
+import { startStandaloneServer } from '@apollo/server/standalone';
+import { typeDefs } from './graphql/typeDefs.ql';
+import { getUserTokenHandler } from './handlers/core.handler';
 
-const PORT = 3001; 
-app.listen(3001, () => {
-  console.log(`api servere is running on port ${PORT}`);
+const server = new ApolloServer({typeDefs, resolvers: {}});
+const { url } = await startStandaloneServer(server, {
+  context: async ({req}) => await getUserTokenHandler(req),
+  listen: {
+    port: 3770
+  },
 });
+
+console.log(url);
