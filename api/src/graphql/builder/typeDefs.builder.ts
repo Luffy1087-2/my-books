@@ -123,7 +123,7 @@ function stringifyReturnType(gqlType: GqlReturnType): string {
     return returningValue;
 }
 
-function stringifyUnions(gqlUnions: GqlUnion[]) {
+function stringifyUnions(gqlUnions: GqlUnion[]): string {
   const stringifiedUnions = gqlUnions.reduce((a: string, c: GqlUnion) => {
     const unionPrefix = `union ${c.name} =`;
     const mappedTypes = c.models.map(m => stringifyReturnType(m));
