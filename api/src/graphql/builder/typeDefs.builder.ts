@@ -1,4 +1,4 @@
-import { GqlFunc, GqlArg, GqlReturnType, GqlQuery, GqlMutation, GqlType, GqlUnion } from "../../types/gql.builder.types";
+import { GqlFunc, GqlArg, GqlFieldDataType, GqlQuery, GqlMutation, GqlType, GqlUnion, GqlFieldType, ReturnModel } from "../../types/gql.builder.types";
 
 class GqlFuncBuilder {
   private parent: TypeDefsBuilder;
@@ -19,7 +19,7 @@ class GqlFuncBuilder {
    this.lastFunc.args = [...this.lastFunc.args, ...args]  
   }
 
-  public addReturnType(returnType: GqlReturnType) {
+  public addReturnType(returnType: GqlFieldDataType) {
     if (!this.lastFunc) throw new TypeError('lastFunc is not defined');
     this.lastFunc.return = returnType;
   }
@@ -51,7 +51,7 @@ export default class TypeDefsBuilder {
     this.funcBuilder.addArgs(...args);
   }
  
-  public addReturnType(returnType: GqlReturnType) {
+  public addReturnType(returnType: GqlFieldDataType) {
     this.funcBuilder.addReturnType(returnType);
   }
 
@@ -84,9 +84,20 @@ export default class TypeDefsBuilder {
 
 function stringifyTypes(gqlTypes: GqlType[]): string {
   const stringifiedTypes = gqlTypes
-    .reduce((a: string, c: GqlType) => 
-      a += `type ${c.name} {\n${JSON.stringify(c.fields, null, 2)}\n`, 
-      ''
+    .reduce((a: string, c: GqlType) => {
+      const jsonFields = Object.keys(c.fields)
+        .map((k: string) => {
+          const field = c.fields[k];
+          return field.isArray
+            ? ` ${k}: [${field.type}${field.isMandatory ? '!' : ''}]${field.isMandatory ? '!' : ''}`
+            : ` ${k}: ${field.type}${field.isMandatory ? '!' : ''}`;
+        })
+        .join('\n');
+      a += `type ${c.name} {\n${jsonFields}\n`;
+
+      return a;
+    },
+    ''
   );
 
   return stringifiedTypes.trim();
@@ -107,7 +118,7 @@ function stringifyFuncs(gqlFuncs: GqlFunc[]): string {
     if (!c.return) throw new TypeError('retunModel should be defined');
     const funcName = c.name;
     const args = c.args.length ? `(${stringifyFuncArgs(c.args)})` : '';
-    const returningValue = stringifyReturnType(c.return);
+    const returningValue = stringifyFieldDataType(c.return.type, !!c.return.isMandatory, !!c.return.isArray);
 
     return `${a}${funcName}${args}:${returningValue}\n`;
   }, '');
@@ -115,21 +126,19 @@ function stringifyFuncs(gqlFuncs: GqlFunc[]): string {
   return stringifiedFuncs.trim();
 }
 
-function stringifyReturnType(gqlType: GqlReturnType): string {
-    const returningValue = gqlType.isArray 
-      ? `[${gqlType.type}]${gqlType.isMandatory ? '!' : ''}]${gqlType.isMandatory ? '!' : ''}`
-      : `${gqlType.type}${gqlType.isMandatory ? '!' : ''}`;
-
-    return returningValue;
-}
-
 function stringifyUnions(gqlUnions: GqlUnion[]): string {
   const stringifiedUnions = gqlUnions.reduce((a: string, c: GqlUnion) => {
     const unionPrefix = `union ${c.name} =`;
-    const mappedTypes = c.models.map(m => stringifyReturnType(m));
+    const mappedTypes = c.models.map(m => stringifyFieldDataType(m.type, !!m.isMandatory, !!m.isArray));
     const strigifiedModels = mappedTypes.join(' | ');
     return `${unionPrefix} ${strigifiedModels}\n`;
   }, '');
 
   return stringifiedUnions.trim();
+}
+
+function stringifyFieldDataType(type: GqlFieldType | ReturnModel, isMandatory: boolean, isArray: boolean) {
+  return isArray
+    ? `[${type}]${isMandatory ? '!' : ''}]${isMandatory ? '!' : ''}`
+    : `${type}]${isMandatory ? '!' : ''}${isMandatory ? '!' : ''}`;
 }

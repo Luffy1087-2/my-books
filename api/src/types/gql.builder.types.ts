@@ -7,12 +7,12 @@ export type GqlArg = {
 export type GqlFunc = {
   name: string;
   args: GqlArg[];
-  return: GqlReturnType | undefined;
+  return: GqlFieldDataType | undefined;
 };
-export type GqlReturnType = {
-  type: GqlFieldType | string;
-  isArray: boolean;
-  isMandatory: boolean;
+export type GqlFieldDataType = {
+  type: GqlFieldType | ReturnModel;
+  isArray?: boolean;
+  isMandatory?: boolean;
 };
 export type GqlQuery = {
   Query: {
@@ -27,11 +27,12 @@ export type GqlMutation = {
 export type GqlType = {
   name: string;
   fields: {
-    [field: string]: GqlFieldType;
+    [field: string]: GqlFieldDataType
   };
 };
 export type GqlUnion = {
   name: string,
-  models: GqlReturnType[]
+  models: GqlFieldDataType[]
 };
-type GqlFieldType = 'String' | 'ID' | 'Int' | 'Bytes';
+export type GqlFieldType = 'String' | 'ID' | 'Int' | 'Bytes';
+export type ReturnModel = 'User' | 'Book' | 'ErrorResponse' | 'UserOrErrorResult' | 'BookOrErrorResult' | 'BooksOrErrorResult';
