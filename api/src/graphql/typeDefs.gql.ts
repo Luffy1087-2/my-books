@@ -1,48 +1,5 @@
 import TypeDefsBuilder from "./builder/typeDefs.builder";
 
-export const typeDefs = `
-
-  union UserOrErrorResult = User | ErrorResponse
-  union BookOrErrorResult = Book | ErrorResponse
-  union BooksOrErrorResult = Books | ErrorResponse
-
-  type Query {
-    getBooks: [Book!]!
-    getBookById(id: ID!): BookOrErrorResult!
-    getBooksByUserId(userId: ID!): BooksOrErrorResult!
-    getBooksByAuthorOrTitle(title: String, author: String): BooksOrErrorResult!
-  }
-  
-  type Mutation {
-    createUserIfNotExists: UserOrErrorResult!
-    createBook(title: String!, author: String!, description: String!, image: Bytes!, userId: ID!): BookOrErrorResult!
-    changeBook(bookId: ID!, title: String!, author: String!, description: String!, image: Bytes!, userId: ID!): BookOrErrorResult!
-    deleteBook(bookId: ID!): BookOrErrorResult!
-  }
-
-  type User {
-    id: ID!
-    name: String!
-    email: String!
-    role: Int!
-  }
-
-  type Book {
-    id: ID!
-    title: String!
-    author: String!
-    description: String!
-    image: Bytes!
-    userId: ID!
-  }
-
-  type ErrorResponse {
-    code: String
-    message: String!
-  }
-
-`;
-
 const builder = new TypeDefsBuilder();
 const addUnions = () => {
 
@@ -124,7 +81,7 @@ const addQueryFuncs = () => {
 
   builder.addQueryFunc('getBooksByUserId');
   builder.addArgs({name: 'userId', type: 'ID', isMandatory: true });
-  builder.addReturnType({type: 'BookOrErrorResult', isMandatory: true });
+  builder.addReturnType({type: 'BooksOrErrorResult', isMandatory: true });
 
   builder.addQueryFunc('getBooksByAuthorOrTitle');
   builder.addArgs(
@@ -135,8 +92,43 @@ const addQueryFuncs = () => {
 
 };
 
-// addMutationFuncs
+const addMutationFuncs = () => {
 
-builder.addQueryFunc('getBooks')
-builder.addReturnType({ type: 'Book', isMandatory: true });
-const result = builder.build();
+  builder.addMutationFunc('createUserIfNotExists');
+  builder.addReturnType({type: 'UserOrErrorResult', isMandatory: true });
+
+  builder.addMutationFunc('createBook');
+  builder.addArgs(
+    { name: 'title', type: 'String', isMandatory: true },
+    { name: 'author', type: 'String', isMandatory: true },
+    { name: 'description', type: 'String', isMandatory: true },
+    { name: 'image', type: 'Bytes', isMandatory: true },
+    { name: 'userId', type: 'ID', isMandatory: true },
+  );
+  builder.addReturnType({type: 'BookOrErrorResult', isMandatory: true });
+
+  builder.addMutationFunc('changeBook');
+  builder.addArgs(
+    { name: 'bookId', type: 'ID', isMandatory: true },
+    { name: 'title', type: 'String', isMandatory: true },
+    { name: 'author', type: 'String', isMandatory: true },
+    { name: 'description', type: 'String', isMandatory: true },
+    { name: 'image', type: 'Bytes', isMandatory: true },
+    { name: 'userId', type: 'ID', isMandatory: true },
+  );
+  builder.addReturnType({type: 'BookOrErrorResult', isMandatory: true });
+
+  builder.addMutationFunc('deleteBook');
+  builder.addArgs(
+    { name: 'bookId', type: 'ID', isMandatory: true }
+  );
+  builder.addReturnType({type: 'BookOrErrorResult', isMandatory: true });
+
+};
+
+addUnions();
+addTypes();
+addQueryFuncs();
+addMutationFuncs();
+
+export const typeDefs = builder.build();
