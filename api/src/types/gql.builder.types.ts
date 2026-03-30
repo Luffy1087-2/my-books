@@ -34,5 +34,5 @@ export type GqlUnion = {
   name: string,
   models: GqlFieldDataType[]
 };
-export type GqlFieldType = 'String' | 'ID' | 'Int' | 'Bytes';
+export type GqlFieldType = 'String' | 'ID' | 'Int' | 'Upload';
 export type ReturnModel = 'User' | 'Book' | 'ErrorResponse' | 'UserOrErrorResult' | 'BookOrErrorResult' | 'BooksOrErrorResult';

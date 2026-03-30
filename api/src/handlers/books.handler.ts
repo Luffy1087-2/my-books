@@ -1,9 +1,9 @@
-import { Book } from "../types/db.types";
-import { ErrorResponse, GoogleUser } from "../types/data.types";
-import { cleanParam, getErrorModel, hasError } from "../utils/helper";
-import SelectQueryBuilder from "../db/builder/select-query.builder";
-import InsertQueryBuilder from "../db/builder/insert-query.builder";
-import DbService from "../services/db.service";
+import { Book } from '../types/db.types.js';
+import { ErrorResponse } from '../types/data.types.js';
+import { cleanParam, getErrorModel, hasError } from '../utils/helper.js';
+import SelectQueryBuilder from "../db/builder/select-query.builder.js";
+import InsertQueryBuilder from "../db/builder/insert-query.builder.js";
+import DbService from "../services/db.service.js";
 
 export const getBooks = async (): Promise<Book[]> => {
   const select = new SelectQueryBuilder('books')
@@ -28,7 +28,7 @@ export const getBooksByUserId = async (userId: number): Promise<Book[] | ErrorRe
 
 export const getBooksByAuthorOrTitle = async (author: string, title: string): Promise<Book[] | ErrorResponse> => {
   const books = await getFilteredBooksByAuthorOrTitle(cleanParam(author) ?? '', cleanParam(title) ?? '');
-  if (hasError(books)) return books as ErrorResponse
+  if (hasError(books)) return books as ErrorResponse;
   if ((books as Book[]).length === 0) return getErrorModel('user have no books');
   return books;
 };
@@ -69,7 +69,7 @@ export const addBook = async (
       id // sub
     ]);
     return book.rows[0];
-  } catch(e: any) {
+  } catch (e: any) {
     return getErrorModel('error adding the book');
   }
 };

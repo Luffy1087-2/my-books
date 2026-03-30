@@ -1,7 +1,7 @@
 import { IncomingMessage } from "http";
-import { isValidUser } from "../utils/helper";
-import { decryptJsonTokenData } from "@my-books/core";
-import { GoogleUser } from "../types/data.types";
+import { isValidUser } from '../utils/helper.js'
+import { decryptJsonTokenData } from '@my-books/core';
+import { GoogleUser } from '../types/data.types.js';
 
 export function getUserTokenHandler(req: IncomingMessage) {
   const tokenFromHeader = req.headers["authorization"];

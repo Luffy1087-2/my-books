@@ -1,16 +1,16 @@
-import { TOperator } from "./db.types";
+import { TOperator } from './db.types.js';
 
-export type TQuerySelect =  { 
+export type TQuerySelect = {
   fields: string[] | TQuerySelect[] | undefined,
   from?: string,
   where: TWhereCondition[],
   union?: TQuerySelect,
   orderBy?: TOrderBy,
   limit?: number,
-  subQueryName?: string 
+  subQueryName?: string
 };
 
-export type TOrderBy = {field: string, direction: 'ASC' | 'DESC'};
+export type TOrderBy = { field: string, direction: 'ASC' | 'DESC' };
 
 export type TWhereCondition = {
   lOperand: string | TQuerySelect,
@@ -19,7 +19,7 @@ export type TWhereCondition = {
   rLogicOperand?: string,
 };
 
-export type TQueryInsert =  { 
+export type TQueryInsert = {
   table: string,
   fields: string[],
   values: string[],

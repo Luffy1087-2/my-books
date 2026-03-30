@@ -1,11 +1,11 @@
-import { TQueryInsert as TInsertQuery } from "../../types/builder.types";
-import { arrayToQueryValues } from "../../utils/helper";
+import { TQueryInsert as TInsertQuery } from '../../types/builder.types.js';
+import { arrayToQueryValues } from '../../utils/helper.js';
 
 export default class InsertQueryBuilder {
   private readonly query: TInsertQuery;
 
   constructor(tableName: string) {
-    this.query = { 
+    this.query = {
       table: tableName,
       fields: [],
       values: [],
@@ -31,7 +31,7 @@ export default class InsertQueryBuilder {
     return this;
   }
 
-  public build(): string  {
+  public build(): string {
     const fieldsString = arrayToQueryValues(this.query.fields);
     const select = 'INSERT INTO'
       .concat(' ', this.query.table)

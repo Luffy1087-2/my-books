@@ -1,4 +1,5 @@
-import { GqlFunc, GqlArg, GqlFieldDataType, GqlQuery, GqlMutation, GqlType, GqlUnion, GqlFieldType, ReturnModel } from "../../types/gql.builder.types";
+import { GqlFunc, GqlArg, GqlFieldDataType, GqlQuery, GqlMutation, GqlType, GqlUnion, GqlFieldType, ReturnModel } from '../../types/gql.builder.types.js';
+import { trimLines } from '../../utils/helper.js';
 
 class GqlFuncBuilder {
   private parent: TypeDefsBuilder;
@@ -9,14 +10,14 @@ class GqlFuncBuilder {
     this.parent = parent;
   }
 
-  public addFunc(name: string, ) {
+  public addFunc(name: string) {
     const length = this.funcs.push({ name, args: [], return: undefined });
     this.lastFunc = this.funcs[length - 1];
   }
 
   public addArgs(...args: GqlArg[]) {
-   if (!this.lastFunc) throw new TypeError('lastFunc is not defined');
-   this.lastFunc.args = [...this.lastFunc.args, ...args]  
+    if (!this.lastFunc) throw new TypeError('lastFunc is not defined');
+    this.lastFunc.args = [...this.lastFunc.args, ...args]
   }
 
   public addReturnType(returnType: GqlFieldDataType) {
@@ -31,11 +32,12 @@ class GqlFuncBuilder {
 }
 
 export default class TypeDefsBuilder {
-  private queryModel: GqlQuery = { Query: { funcs: []} };
+  private queryModel: GqlQuery = { Query: { funcs: [] } };
   private mutationModel: GqlMutation = { Mutation: { funcs: [] } };
   private gqlTypes: GqlType[] = [];
   private gqlUnions: GqlUnion[] = [];
   private funcBuilder = new GqlFuncBuilder(this);
+  public shouldAddUploadType = false;
 
   public addQueryFunc(name: string) {
     this.funcBuilder.addFunc(name);
@@ -50,7 +52,7 @@ export default class TypeDefsBuilder {
   public addArgs(...args: GqlArg[]) {
     this.funcBuilder.addArgs(...args);
   }
- 
+
   public addReturnType(returnType: GqlFieldDataType) {
     this.funcBuilder.addReturnType(returnType);
   }
@@ -63,13 +65,18 @@ export default class TypeDefsBuilder {
     this.gqlUnions.push(gqlUnion);
   }
 
+  public enableUploadType() {
+    this.shouldAddUploadType = true;
+
+  }
+
   public build() {
     const builthUnions = stringifyUnions(this.gqlUnions);
     const builthTypes = stringifyTypes(this.gqlTypes);
     const queryFuncs = stringifyFuncs(this.queryModel.Query.funcs);
     const mutationFuncs = stringifyFuncs(this.mutationModel.Mutation.funcs);
-
-    return `
+    const schema = `
+      ${this.shouldAddUploadType ? 'scalar Upload' : ''}
       ${builthUnions}
       ${builthTypes}
       type Query {
@@ -79,6 +86,8 @@ export default class TypeDefsBuilder {
         ${mutationFuncs}
       }
     `;
+
+    return trimLines(schema);
   }
 }
 
@@ -93,23 +102,23 @@ function stringifyTypes(gqlTypes: GqlType[]): string {
             : ` ${k}: ${field.type}${field.isMandatory ? '!' : ''}`;
         })
         .join('\n');
-      a += `type ${c.name} {\n${jsonFields}\n`;
+      a += `type ${c.name} {\n${jsonFields}\n}\n`;
 
       return a;
     },
-    ''
-  );
+      ''
+    );
 
   return stringifiedTypes.trim();
 }
 
 function stringifyFuncArgs(args: GqlArg[]): string {
-  const mappedArgs = args.map((arg: GqlArg) => 
+  const mappedArgs = args.map((arg: GqlArg) =>
     arg.isArray
-    ? `[${arg.name}:${arg.type}${arg.isMandatory ? '!' : ''}]${arg.isMandatory ? '!' : ''}`
-    : `${arg.name}:${arg.type}${arg.isMandatory ? '!' : ''}`);
+      ? `[${arg.name}:${arg.type}${arg.isMandatory ? '!' : ''}]${arg.isMandatory ? '!' : ''}`
+      : `${arg.name}:${arg.type}${arg.isMandatory ? '!' : ''}`);
   const stringifiedArgs = mappedArgs.join(', ');
-  
+
   return stringifiedArgs;
 }
 
@@ -131,7 +140,7 @@ function stringifyUnions(gqlUnions: GqlUnion[]): string {
     const unionPrefix = `union ${c.name} =`;
     const mappedTypes = c.models.map(m => stringifyFieldDataType(m.type, !!m.isMandatory, !!m.isArray));
     const strigifiedModels = mappedTypes.join(' | ');
-    return `${unionPrefix} ${strigifiedModels}\n`;
+    return `${a}${unionPrefix} ${strigifiedModels}\n`;
   }, '');
 
   return stringifiedUnions.trim();
@@ -139,6 +148,6 @@ function stringifyUnions(gqlUnions: GqlUnion[]): string {
 
 function stringifyFieldDataType(type: GqlFieldType | ReturnModel, isMandatory: boolean, isArray: boolean) {
   return isArray
-    ? `[${type}]${isMandatory ? '!' : ''}]${isMandatory ? '!' : ''}`
-    : `${type}]${isMandatory ? '!' : ''}${isMandatory ? '!' : ''}`;
+    ? `[${type}${isMandatory ? '!' : ''}]${isMandatory ? '!' : ''}`
+    : `${type}${isMandatory ? '!' : ''}`;
 }

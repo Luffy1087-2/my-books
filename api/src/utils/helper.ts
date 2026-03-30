@@ -1,13 +1,13 @@
-import { ErrorResponse, GoogleUser } from "../types/data.types";
+import { ErrorResponse, GoogleUser } from "../types/data.types.js";
 
 export function arrayToQueryValues(values: string[], wrapInQuotes: boolean = false): string {
   return values.reduce((p: string, c: string) => {
-      const val = wrapInQuotes ? `${c}` : c;
+    const val = wrapInQuotes ? `${c}` : c;
 
-      return `${p}${val}, `;
-    }, 
+    return `${p}${val}, `;
+  },
     ''
-  ).substring(0,-1);
+  ).substring(0, -1);
 }
 
 export function cleanParam(param: string | undefined): string | undefined {
@@ -28,7 +28,7 @@ export function hasError(data: any) {
   const error: ErrorResponse = data;
   return error
     && error.constructor === Object
-    && error.message 
+    && error.message
     && error.message.length;
 }
 
@@ -36,7 +36,7 @@ export function getErrorModel(message: string): ErrorResponse {
   try {
     return JSON.parse(message) as ErrorResponse;
   } catch {
-    return { 
+    return {
       message: 'error parsing message',
       code: 'generic error'
     };
@@ -51,4 +51,11 @@ export function exWithContext(message: string, ctx?: string) {
   if (!ctx) delete errModel.ctx;
 
   return JSON.stringify(errModel);
+}
+
+export function trimLines(str: string) {
+  return str
+    .split('\n')
+    .map(line => line.trim())
+    .join('\n');
 }

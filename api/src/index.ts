@@ -1,12 +1,13 @@
 'use strict';
-import {ApolloServer} from '@apollo/server';
+import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
-import { typeDefs } from './graphql/typeDefs.gql';
-import { getUserTokenHandler } from './handlers/core.handler';
+import { typeDefs } from './graphql/typeDefs.gql.js';
+import { getUserTokenHandler } from './handlers/core.handler.js';
 
-const server = new ApolloServer({typeDefs, resolvers: {}});
+console.log(typeDefs);
+const server = new ApolloServer({ typeDefs, resolvers: {} });
 const { url } = await startStandaloneServer(server, {
-  context: async ({req}) => await getUserTokenHandler(req),
+  context: async ({ req }) => await getUserTokenHandler(req),
   listen: {
     port: 3770
   },

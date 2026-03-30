@@ -1,6 +1,6 @@
-import createUserIfNotExists from "../handlers/users.handler";
-import { GoogleUser } from "../types/data.types"
-import { hasError } from "../utils/helper";
+import createUserIfNotExists from '../handlers/users.handler.js';
+import { GoogleUser } from '../types/data.types.js'
+import { hasError } from '../utils/helper.js';
 
 export default {
   Query: {

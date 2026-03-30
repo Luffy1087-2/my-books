@@ -1,10 +1,10 @@
-import { TOrderBy, TQuerySelect, TWhereCondition } from "../../types/builder.types";
+import { TOrderBy, TQuerySelect, TWhereCondition } from '../../types/builder.types.js';
 
 export default class SelectQueryBuilder {
   private readonly query: TQuerySelect;
 
   constructor(tableName: string) {
-    this.query = { where: [], fields: undefined};
+    this.query = { where: [], fields: undefined };
     this.withTable(tableName);
   }
 
@@ -38,7 +38,7 @@ export default class SelectQueryBuilder {
     return this;
   }
 
-  public build(rQuery: TQuerySelect | undefined | void): string  {
+  public build(rQuery?: TQuerySelect | undefined | void): string {
     const query = rQuery ?? this.query;
     const fieldsString = this.getFieldsOrSubQuery(rQuery?.fields);
     let select = 'SELECT'
@@ -58,7 +58,7 @@ export default class SelectQueryBuilder {
   private getFieldsOrSubQuery(fieldsOrSubQuery: string[] | TQuerySelect[] | undefined): string {
     if (!fieldsOrSubQuery) throw new TypeError('rQuery should not be empty');
     if (fieldsOrSubQuery.every((v) => typeof v === 'string'))
-      return fieldsOrSubQuery.reduce((p: string, c: string) => p = p.concat(c,','), '').slice(0, -1);
+      return fieldsOrSubQuery.reduce((p: string, c: string) => p = p.concat(c, ','), '').slice(0, -1);
 
     return '( ' + this.build(fieldsOrSubQuery[0] as TQuerySelect) + ' ) ';
   }
