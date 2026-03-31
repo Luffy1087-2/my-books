@@ -4,7 +4,6 @@ import { startStandaloneServer } from '@apollo/server/standalone';
 import { typeDefs } from './graphql/typeDefs.gql.js';
 import { getUserTokenHandler } from './handlers/core.handler.js';
 
-console.log(typeDefs);
 const server = new ApolloServer({ typeDefs, resolvers: {} });
 const { url } = await startStandaloneServer(server, {
   context: async ({ req }) => await getUserTokenHandler(req),
@@ -13,4 +12,7 @@ const { url } = await startStandaloneServer(server, {
   },
 });
 
-console.log(url);
+console.log(
+  'graphql server listening to: ',
+  url
+);
