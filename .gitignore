@@ -24,8 +24,8 @@ yarn-error.log*
 
 # customs
 .env
-api/node_modules
-core/node_modules
-core/dist
-api/dist
+packages/api/node_modules
+packages/core/node_modules
+packages/core/dist
+packages/api/dist
 tsconfig.tsbuildinfo

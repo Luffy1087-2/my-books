@@ -1,6 +1,6 @@
 import { IncomingMessage } from "http";
 import { isValidUser } from '../utils/helper.js'
-import { decryptJsonTokenData } from '@my-books/core';
+import { decryptJsonTokenData } from '../../../core/src/index.js';
 import { GoogleUser } from '../types/data.types.js';
 
 export function getUserTokenHandler(req: IncomingMessage) {

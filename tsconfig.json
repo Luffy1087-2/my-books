@@ -25,7 +25,7 @@
     "src"
   ],
   "references": [
-    {"path": "./core"},
-    {"path": "./api"}
+    {"path": "./packages/core"},
+    {"path": "./packages/api"}
   ]
 }

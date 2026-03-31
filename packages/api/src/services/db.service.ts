@@ -1,5 +1,5 @@
-import {Pool} from 'pg';
-import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER } from '@my-books/core';
+import { Pool } from 'pg';
+import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER } from '../../../core/src/index.js';
 
 export default class DbService {
   private static pool: Pool | undefined;
