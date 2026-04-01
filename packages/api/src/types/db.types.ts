@@ -13,7 +13,7 @@ export type Book = {
   image: string
 };
 
-export type TOperator =
+export type DBOperator =
   // Arithmetic Operators
   | '+'
   | '-'

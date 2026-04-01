@@ -1,27 +1,30 @@
 import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { useContext } from "react";
-import { TUserContext, UserContext } from "../state/UserContext";
-import { encryptToken, CLIENT_ID } from '@my-books/core';
+import { UserContext } from "../state/UserContext";
+import { encryptToken, CLIENT_ID, UserEntityModel } from '@my-books/core';
 
-export function SSOGoogleLoginButton() {
+export function SSOGoogleLoginButton(
+  {refreshAppState}: {
+    refreshAppState: (sessionData: UserEntityModel | null) => void
+  }) {
   const userContext = useContext(UserContext);
   if (userContext && Object.keys(userContext).length > 1) {
-    // check if the user is present at the db
-    // else insert at db
     return null;
   }
 
   const onSuccess = async (res: CredentialResponse) => {
     const { credential } = res;
     if (!credential) throw new TypeError('login failed');
-    const sessionData = jwtDecode(credential) satisfies TUserContext;
+    const sessionData = jwtDecode(credential) satisfies UserEntityModel
     sessionStorage.setItem('userToken', encryptToken(JSON.stringify(sessionData)));
-    userContext?.setUserState({...sessionData, setUserState: userContext.setUserState})
+    // Call Create Or Get USer
+    refreshAppState(sessionData);
   };
 
   const onError = () => {
-    userContext?.setUserState(null);
+    refreshAppState(null);
+    sessionStorage.removeItem('userToken');
   };
 
   return (

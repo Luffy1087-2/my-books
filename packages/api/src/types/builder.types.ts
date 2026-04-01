@@ -1,25 +1,25 @@
-import { TOperator } from './db.types.js';
+import { DBOperator } from './db.types.js';
 
-export type TQuerySelect = {
-  fields: string[] | TQuerySelect[] | undefined,
+export type QuerySelect = {
+  fields: string[] | QuerySelect[] | undefined,
   from?: string,
-  where: TWhereCondition[],
-  union?: TQuerySelect,
-  orderBy?: TOrderBy,
+  where: WhereCondition[],
+  union?: QuerySelect,
+  orderBy?: OrderBy,
   limit?: number,
   subQueryName?: string
 };
 
-export type TOrderBy = { field: string, direction: 'ASC' | 'DESC' };
+export type OrderBy = { field: string, direction: 'ASC' | 'DESC' };
 
-export type TWhereCondition = {
-  lOperand: string | TQuerySelect,
-  rOperand: string | TQuerySelect,
-  operator: TOperator,
+export type WhereCondition = {
+  lOperand: string | QuerySelect,
+  rOperand: string | QuerySelect,
+  operator: DBOperator,
   rLogicOperand?: string,
 };
 
-export type TQueryInsert = {
+export type QueryInsert = {
   table: string,
   fields: string[],
   values: string[],

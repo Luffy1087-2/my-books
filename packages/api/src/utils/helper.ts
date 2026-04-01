@@ -1,13 +1,16 @@
-import { ErrorResponse, GoogleUser } from "../types/data.types.js";
+import { UserEntityModel } from '@my-books/core';
+import { ErrorResponse } from "../types/data.types.js";
 
 export function arrayToQueryValues(values: string[], wrapInQuotes: boolean = false): string {
-  return values.reduce((p: string, c: string) => {
-    const val = wrapInQuotes ? `${c}` : c;
+  return values
+    .reduce((p: string, c: string) => {
+      const val = wrapInQuotes ? `${c}` : c;
 
-    return `${p}${val}, `;
-  },
-    ''
-  ).substring(0, -1);
+      return `${p}${val}, `;
+    },
+      ''
+    )
+    .substring(0, -1);
 }
 
 export function cleanParam(param: string | undefined): string | undefined {
@@ -16,12 +19,12 @@ export function cleanParam(param: string | undefined): string | undefined {
   return match ? match[0] : undefined;
 }
 
-export function isValidUser(user: GoogleUser | null): boolean {
+export function isValidUser(user: UserEntityModel | null): boolean {
   return user !== null &&
-    typeof user.sub === 'string' &&
-    /^\d+$/.test(user.sub) &&
-    typeof user.given_name === 'string' &&
-    /^\w+$/.test(user.given_name);
+    typeof user.id === 'string' &&
+    /^\d+$/.test(user.id) &&
+    typeof user.name === 'string' &&
+    /^\w+$/.test(user.name);
 }
 
 export function hasError(data: any) {

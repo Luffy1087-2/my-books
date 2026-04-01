@@ -1,8 +1,3 @@
-export type GoogleUser = {
-  sub: string,
-  given_name: string,
-  email: string
-}
 
 export type DBUser = {
   id: number,

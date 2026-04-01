@@ -1,12 +1,12 @@
-import createUserIfNotExists from '../handlers/users.handler.js';
-import { GoogleUser } from '../types/data.types.js'
+import { GoogleUserModel } from '@my-books/core';
 import { hasError } from '../utils/helper.js';
+import createUserIfNotExists from '../handlers/users.handler.js';
 
 export default {
   Query: {
   },
   Mutation: {
-    createUserIfNotExists: async (parent: object, args: any, context: { user: GoogleUser }) => {
+    createUserIfNotExists: async (parent: any, args: any, context: { user: GoogleUserModel }) => {
       return await createUserIfNotExists(context.user);
     }
   },

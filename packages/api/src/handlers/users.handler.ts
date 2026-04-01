@@ -1,12 +1,13 @@
-
-import { DBUser, ErrorResponse, GoogleUser } from '../types/data.types.js';
+import { DBUser, ErrorResponse } from '../types/data.types.js';
+import { exWithContext, getErrorModel } from '../utils/helper.js';
+import { GoogleUserModel } from '@my-books/core';
 import SelectQueryBuilder from '../db/builder/select-query.builder.js';
 import InsertQueryBuilder from '../db/builder/insert-query.builder.js';
 import DbService from '../services/db.service.js';
-import { exWithContext, getErrorModel } from '../utils/helper.js';
 
-const createUserIfNotExists = async (user: GoogleUser): Promise<DBUser | ErrorResponse> => {
+const createUserIfNotExists = async (user: GoogleUserModel): Promise<DBUser | ErrorResponse> => {
   try {
+    if (!user || !user.sub || !user.sub.length) throw new TypeError('session is not valid');
     const query = new SelectQueryBuilder('users');
     const select = query
       .withFields('id', 'name', 'email', 'u_role')
@@ -42,7 +43,7 @@ async function isUsersTableEmpty(): Promise<boolean> {
   }
 }
 
-async function insertUser(user: GoogleUser, isAdmin: boolean): Promise<DBUser> {
+async function insertUser(user: GoogleUserModel, isAdmin: boolean): Promise<DBUser> {
   try {
     const query = new InsertQueryBuilder('users')
       .withFields('id', 'name', 'email', 'u_role')

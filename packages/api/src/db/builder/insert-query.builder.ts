@@ -1,8 +1,8 @@
-import { TQueryInsert as TInsertQuery } from '../../types/builder.types.js';
+import { QueryInsert } from '../../types/builder.types.js';
 import { arrayToQueryValues } from '../../utils/helper.js';
 
 export default class InsertQueryBuilder {
-  private readonly query: TInsertQuery;
+  private readonly query: QueryInsert;
 
   constructor(tableName: string) {
     this.query = {

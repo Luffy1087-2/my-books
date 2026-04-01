@@ -2,17 +2,18 @@ import logo from './logo.svg';
 import './App.css';
 import { useState, useContext } from 'react';
 import { SSOGoogleLoginButton } from './components/SSOGoogleLoginButton';
-import { TUserContext, UserContext } from './state/UserContext';
+import { UserContext } from './state/UserContext';
+import { UserEntityModel } from '@my-books/core';
 
 function App() {
   const userContext = useContext(UserContext);
-  const [ user, setUserState ] = useState<TUserContext>(userContext);
-
+  const [ user, setAppState ] = useState<UserEntityModel | null>(userContext);
+  console.log(user)
   return (
-    <UserContext.Provider value={{...user, setUserState}}>
+    <UserContext.Provider value={user}>
       <div className="App">
-        <SSOGoogleLoginButton />
-        {user && <h1>{user.given_name}</h1>}
+        <SSOGoogleLoginButton refreshAppState={setAppState} />
+        {user && <h1>{user.name}</h1>}
       </div>
     </UserContext.Provider>
   );

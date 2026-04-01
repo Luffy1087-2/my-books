@@ -1,26 +1,26 @@
-import { TOrderBy, TQuerySelect, TWhereCondition } from '../../types/builder.types.js';
+import { OrderBy, QuerySelect, WhereCondition } from '../../types/builder.types.js';
 
 export default class SelectQueryBuilder {
-  private readonly query: TQuerySelect;
+  private readonly query: QuerySelect;
 
   constructor(tableName: string) {
     this.query = { where: [], fields: undefined };
     this.withTable(tableName);
   }
 
-  public withFields(...fields: string[] | TQuerySelect[]): this {
+  public withFields(...fields: string[] | QuerySelect[]): this {
     this.query.fields = fields;
 
     return this;
   }
 
-  public withWhere(condition: TWhereCondition): this {
+  public withWhere(condition: WhereCondition): this {
     this.query.where.push(condition);
 
     return this;
   };
 
-  public withOrderBy(orderBy: TOrderBy): this {
+  public withOrderBy(orderBy: OrderBy): this {
     this.query.orderBy = orderBy;
 
     return this;
@@ -38,7 +38,7 @@ export default class SelectQueryBuilder {
     return this;
   }
 
-  public build(rQuery?: TQuerySelect | undefined | void): string {
+  public build(rQuery?: QuerySelect | undefined | void): string {
     const query = rQuery ?? this.query;
     const fieldsString = this.getFieldsOrSubQuery(rQuery?.fields);
     let select = 'SELECT'
@@ -55,15 +55,15 @@ export default class SelectQueryBuilder {
     this.query.from = table;
   }
 
-  private getFieldsOrSubQuery(fieldsOrSubQuery: string[] | TQuerySelect[] | undefined): string {
+  private getFieldsOrSubQuery(fieldsOrSubQuery: string[] | QuerySelect[] | undefined): string {
     if (!fieldsOrSubQuery) throw new TypeError('rQuery should not be empty');
     if (fieldsOrSubQuery.every((v) => typeof v === 'string'))
       return fieldsOrSubQuery.reduce((p: string, c: string) => p = p.concat(c, ','), '').slice(0, -1);
 
-    return '( ' + this.build(fieldsOrSubQuery[0] as TQuerySelect) + ' ) ';
+    return '( ' + this.build(fieldsOrSubQuery[0] as QuerySelect) + ' ) ';
   }
 
-  private buildWhere(select: string, query: TQuerySelect): string {
+  private buildWhere(select: string, query: QuerySelect): string {
     select += select.concat(' ', 'WHERE');
     for (let i = 0; i < query.where.length; i++) {
       const where = query.where[i];
@@ -76,13 +76,13 @@ export default class SelectQueryBuilder {
     return select;
   }
 
-  private getOperandOrSubQuery(where: string | TQuerySelect): string {
+  private getOperandOrSubQuery(where: string | QuerySelect): string {
     if (typeof where === 'string') return where;
     if (!Array.isArray(where) && typeof where === 'object') return `( ${this.build(where)}) `;
     throw new TypeError('operand should be a string or an object');
   }
 
-  private buildOrderBy(select: string, query: TQuerySelect): string {
+  private buildOrderBy(select: string, query: QuerySelect): string {
     select += select.concat(' ORDER BY');
     select += select.concat(' ', query.orderBy!.field);
     select += select.concat(' ', query.orderBy!.direction);
