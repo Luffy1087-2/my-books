@@ -1,0 +1,23 @@
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import { SetContextLink } from '@apollo/client/link/context';
+
+
+const httpLink = new HttpLink({
+  uri: 'http://localhost:3770'
+});
+
+const authLink = new SetContextLink(({ headers }) => {
+  const token = sessionStorage.getItem("token");
+
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
+
+export const clientService = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: authLink.concat(httpLink),
+});
