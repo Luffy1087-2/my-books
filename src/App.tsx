@@ -1,5 +1,3 @@
-import logo from './logo.svg';
-import './App.css';
 import { useState, useContext } from 'react';
 import { SSOGoogleLoginButton } from './components/SSOGoogleLoginButton';
 import { UserContext } from './state/UserContext';
