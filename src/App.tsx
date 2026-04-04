@@ -7,13 +7,13 @@ import { clientService } from './service/client.service';
 
 function App() {
   const userContext = useContext(UserContext);
-  const [ user, setAppState ] = useState<UserEntityModel | null>(userContext);
-  console.log(user)
+  const [ user, setLoginState ] = useState<UserEntityModel | null>(userContext);
+
   return (
     <ApolloProvider client={clientService}>
       <UserContext.Provider value={user}>
         <div className="App">
-          <SSOGoogleLoginButton refreshAppState={setAppState} />
+          <SSOGoogleLoginButton refreshAppState={setLoginState} />
           {user && <h1>{user.name}</h1>}
         </div>
       </UserContext.Provider>

@@ -19,12 +19,12 @@ export function cleanParam(param: string | undefined): string | undefined {
   return match ? match[0] : undefined;
 }
 
-export function isValidUser(user: UserEntityModel | null): boolean {
-  return user !== null &&
-    typeof user.id === 'string' &&
-    /^\d+$/.test(user.id) &&
-    typeof user.name === 'string' &&
-    /^\w+$/.test(user.name);
+export function isUserEntityValid(user: UserEntityModel | null): boolean {
+  return !!user
+    && user != null
+    && /^\d+$/i.test(user.id.toString())
+    && typeof user.name === 'string'
+    && /^\w+$/i.test(user.name);
 }
 
 export function hasError(data: any) {
