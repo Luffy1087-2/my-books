@@ -57,4 +57,4 @@ async function insertUser(user: GoogleUserModel, isAdmin: boolean): Promise<DBUs
   }
 }
 
-export default createUserIfNotExists;
+export { createUserIfNotExists };
