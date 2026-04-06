@@ -1,5 +1,7 @@
 import { UserEntityModel } from '@my-books/core';
 import { ErrorResponse } from "../types/data.types.js";
+import { fileURLToPath } from 'url';
+import path from 'path';
 
 export function arrayToQueryValues(values: string[], wrapInQuotes: boolean = false): string {
   return values
@@ -61,4 +63,11 @@ export function trimLines(str: string) {
     .split('\n')
     .map(line => line.trim())
     .join('\n');
+}
+
+export function getEnvPath(scriptUrl: string, envDir: string = 'my-books') {
+  const dirName = path.dirname(fileURLToPath(scriptUrl));
+  const rightPath = dirName.substring(0, dirName.indexOf(envDir) + envDir.length + 1) + '.env';
+
+  return rightPath;
 }
