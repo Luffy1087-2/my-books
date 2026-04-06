@@ -23,8 +23,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "concurrently \"npm run start:server\" \"npm run start:app\"",
-    "start:app": "env-cmd -f .env react-scripts start",
+    "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
+    "start:client": "env-cmd -f .env react-scripts start",
     "start:server": "env-cmd -f .env node packages/api/dist/index.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
