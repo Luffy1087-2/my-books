@@ -8,8 +8,13 @@ export const DB_NAME = process.env.REACT_APP_DB_NAME as string;
 export const DB_HOST = process.env.REACT_APP_DB_HOST as string;
 export const DB_PORT = process.env.REACT_APP_DB_PORT as string;
 
+function getSecretKey(): string {
+  if (SECRET_KEY) return SECRET_KEY;
+  return process.env.REACT_APP_SSO_CLIENT_SECRET as string;
+}
+
 export function encryptToWebToken(dataString: string): string {
-  const encryptedString = CryptoJS.AES.encrypt(dataString, SECRET_KEY);
+  const encryptedString = CryptoJS.AES.encrypt(dataString, getSecretKey());
   const base64String = encryptedString.toString(CryptoJS.format.OpenSSL);
   const encodedString = encodeURIComponent(base64String);
 
@@ -18,6 +23,7 @@ export function encryptToWebToken(dataString: string): string {
 
 export function decryptWebTokenData<R>(encodedString: string): R | null {
   try {
+    const SECRET_KEY = getSecretKey();
     if (!SECRET_KEY || !SECRET_KEY.length) throw new TypeError('SECRET_KEY is not defined');
     const decodedString = decodeURIComponent(encodedString);
     if (!decodedString || !decodedString.length) throw new TypeError('decodedString is not valid');
