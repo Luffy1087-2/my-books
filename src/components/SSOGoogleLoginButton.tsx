@@ -15,7 +15,7 @@ export function SSOGoogleLoginButton(
 
   const mapToUserEntityModel = (googleModel: GoogleUserModel): UserEntityModel => {
     return {
-      id: Number(googleModel.sub),
+      gId: googleModel.sub,
       email: googleModel.email,
       name: googleModel.given_name,
       role: 'admin'
@@ -30,7 +30,7 @@ export function SSOGoogleLoginButton(
     const userDataString = JSON.stringify(userEntityModel);
     const encryptedUserToken = encryptToWebToken(userDataString);
     console.log(encryptedUserToken);
-    sessionStorage.setItem('userToken', encryptedUserToken);
+    sessionStorage.setItem('userToken', encryptedUserToken); // EntrityUserModel should be written
     // Call Create Or Get USer
     refreshAppState(userEntityModel);
   };

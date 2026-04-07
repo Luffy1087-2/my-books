@@ -13,6 +13,12 @@ function getSecretKey(): string {
   return process.env.REACT_APP_SSO_CLIENT_SECRET as string;
 }
 
+export function getEnvByKey(key: string): string {
+  const varByKey = process.env['REACT_APP_' + key];
+  if (!varByKey) throw new TypeError(key + ' is not present');
+  return varByKey;
+}
+
 export function encryptToWebToken(dataString: string): string {
   const encryptedString = CryptoJS.AES.encrypt(dataString, getSecretKey());
   const base64String = encryptedString.toString(CryptoJS.format.OpenSSL);
