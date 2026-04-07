@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER } from '@my-books/core';
+import { getEnvByKey } from '@my-books/core';
 
 export default class DbService {
   private static pool: Pool | undefined;
@@ -9,16 +9,19 @@ export default class DbService {
   }
 
   private static connect(): Pool {
-    return this.pool ?? this.createPool();
+    if (!DbService.pool) {
+      DbService.pool = this.createPool();
+    }
+    return DbService.pool;
   }
 
   private static createPool(): Pool {
     return new Pool({
-      host: DB_HOST,
-      database: DB_NAME,
-      user: DB_USER,
-      password: DB_PASSWORD,
-      port: Number(DB_PORT)
+      host: getEnvByKey('DB_HOST'),
+      database: getEnvByKey('DB_NAME'),
+      user: getEnvByKey('DB_USER'),
+      password: getEnvByKey('DB_PASSWORD'),
+      port: Number(getEnvByKey('DB_PORT'))
     });
   }
 
