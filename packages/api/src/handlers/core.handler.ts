@@ -1,6 +1,6 @@
 import { IncomingMessage } from "http";
-import { isUserEntityValid } from '../utils/helper.js'
 import { decryptWebTokenData, UserEntityModel } from '@my-books/core';
+import { isUserEntityValid } from '../utils/model.utils.js';
 
 export function getUserTokenHandler(req: IncomingMessage) {
   const tokenFromHeader = req.headers["authorization"];

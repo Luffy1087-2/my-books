@@ -1,7 +1,7 @@
 import { UserEntityModel } from '@my-books/core';
-import { hasError } from '../utils/helper.js';
-import { createUserIfNotExists } from '../handlers/users.handler.js';
 import { ErrorResponse } from '../types/data.types.js';
+import { hasError } from '../utils/model.utils.js';
+import { createUserIfNotExists } from '../handlers/users.handler.js';
 
 export const resolvers = {
   Query: {

@@ -1,6 +1,6 @@
-import { DBUser, ErrorResponse } from '../types/data.types.js';
-import { exWithContext, getErrorModel } from '../utils/helper.js';
 import { UserEntityModel } from '@my-books/core';
+import { DBUser, ErrorResponse } from '../types/data.types.js';
+import { exceptionStringified, getErrorModel } from '../utils/model.utils.js';
 import SelectQueryBuilder from '../db/builder/select-query.builder.js';
 import InsertQueryBuilder from '../db/builder/insert-query.builder.js';
 import DbService from '../services/db.service.js';
@@ -15,7 +15,7 @@ async function isUsersTableEmpty(): Promise<boolean> {
 
     return Number(data.rows[0].count) === 0;
   } catch (e: any) {
-    throw new Error(exWithContext(e.message, 'isUsersTableEmpty'));
+    throw new Error(exceptionStringified(e.message, 'isUsersTableEmpty'));
   }
 }
 
@@ -32,7 +32,7 @@ async function insertUser(user: UserEntityModel, isAdmin: boolean): Promise<User
     const userEntity = mapToUserEntityModel(row, roleNumber);
     return userEntity;
   } catch (e: any) {
-    throw new Error(exWithContext(e.message, 'insertUser'));
+    throw new Error(exceptionStringified(e.message, 'insertUser'));
   }
 }
 

@@ -1,5 +1,5 @@
 import { QueryInsert } from '../../types/builder.types.js';
-import { arrayToQueryValues } from '../../utils/helper.js';
+import { arrayToQueryValues } from '../../utils/builder.utils.js';
 
 export default class InsertQueryBuilder {
   private readonly query: QueryInsert;
