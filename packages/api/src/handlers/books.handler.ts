@@ -19,7 +19,8 @@ export const getBooksByUserId = async (userId: number): Promise<Book[] | ErrorRe
     .withWhere({
       lOperand: 'userId',
       operator: '=',
-      rOperand: userId.toString()
+      rOperand: userId,
+      operandsQuotes: [false, false]
     });
   const data = await DbService.query(select.build());
   if (data.rowCount === 0) return getErrorModel('user have no books');
@@ -40,7 +41,8 @@ export const getBookById = async (id: number): Promise<Book | ErrorResponse> => 
     .withWhere({
       lOperand: 'id',
       operator: '=',
-      rOperand: id.toString()
+      rOperand: id,
+      operandsQuotes: [false, false]
     })
     .build();
   const book = await DbService.query(select);
@@ -82,12 +84,14 @@ async function getFilteredBooksByAuthorOrTitle(author: string, title: string): P
       lOperand: 'author',
       operator: 'LIKE',
       rOperand: `%${author}%`,
-      rLogicOperand: 'OR'
+      rLogicOperand: 'OR',
+      operandsQuotes: [false, true]
     })
     .withWhere({
       lOperand: 'UPPER(title)',
       operator: 'LIKE',
       rOperand: `%${title!.toUpperCase()}%`,
+      operandsQuotes: [false, true]
     });
   const data = await DbService.query(select.build());
   return data.rows as Book[];
