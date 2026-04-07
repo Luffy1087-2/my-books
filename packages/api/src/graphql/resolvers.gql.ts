@@ -1,13 +1,13 @@
-import { GoogleUserModel } from '@my-books/core';
+import { UserEntityModel } from '@my-books/core';
 import { hasError } from '../utils/helper.js';
 import { createUserIfNotExists } from '../handlers/users.handler.js';
-import { DBUser, ErrorResponse } from '../types/data.types.js';
+import { ErrorResponse } from '../types/data.types.js';
 
 export const resolvers = {
   Query: {
   },
   Mutation: {
-    createUserIfNotExists: async (parent: any, args: any, context: { user: GoogleUserModel }): Promise<DBUser | ErrorResponse> => {
+    createUserIfNotExists: async (parent: any, args: any, context: { user: UserEntityModel }): Promise<UserEntityModel | ErrorResponse> => {
       return await createUserIfNotExists(context.user);
     }
   },
