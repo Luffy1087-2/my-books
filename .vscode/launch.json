@@ -4,15 +4,16 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
     {
-      "name": "Debug Web App",
+      "name": "Debug Clint",
       "request": "launch",
       "type": "chrome",
       "url": "https://localhost:3000",
       "webRoot": "${workspaceFolder}"
     },
     {
-      "name": "Debug API",
+      "name": "Debug Server",
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/packages/api/dist/index.js",
