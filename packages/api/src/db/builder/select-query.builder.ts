@@ -40,12 +40,12 @@ export default class SelectQueryBuilder {
 
   public build(rQuery?: QuerySelect | undefined | void): string {
     const query = rQuery ?? this.query;
-    const fieldsString = this.getFieldsOrSubQuery(rQuery?.fields);
+    const fieldsString = this.getFieldsOrSubQuery(query?.fields);
     let select = 'SELECT'
       .concat(' ', fieldsString)
-      .concat(' ', query.from!);
-    select += !query.where.length ? this.buildWhere(select, query) : '';
-    select += query.orderBy ? this.buildOrderBy(select, query) : '';
+      .concat(' FROM ', query.from!);
+    select += query.where.length ? ' ' + this.buildWhere(query) : '';
+    select += query.orderBy ? ' ' + this.buildOrderBy(query) : '';
     select += query.limit ? ' LIMIT ' + query.limit : '';
     select += query.subQueryName ? ' AS ' + query.subQueryName : '';
     return select;
@@ -63,29 +63,32 @@ export default class SelectQueryBuilder {
     return '( ' + this.build(fieldsOrSubQuery[0] as QuerySelect) + ' ) ';
   }
 
-  private buildWhere(select: string, query: QuerySelect): string {
-    select += select.concat(' ', 'WHERE');
+  private buildWhere(query: QuerySelect): string {
+    let where = 'WHERE';
     for (let i = 0; i < query.where.length; i++) {
-      const where = query.where[i];
-      select += select.concat(' ', this.getOperandOrSubQuery(where.lOperand));
-      select += select.concat(' ', where.operator);
-      select += select.concat(' ', this.getOperandOrSubQuery(where.rOperand));
-      if (!where.rLogicOperand || where.rLogicOperand && query.where[i + 1]) continue;
-      select += select.concat(' ', where.rLogicOperand);
+      const whereModel = query.where[i];
+      where = where.concat(' ', this.getOperandOrSubQuery(whereModel.lOperand, whereModel.operandsQuotes[0]));
+      where = where.concat(' ', whereModel.operator);
+      where = where.concat(' ', this.getOperandOrSubQuery(whereModel.rOperand, whereModel.operandsQuotes[1]));
+      if (!whereModel.rLogicOperand || whereModel.rLogicOperand && query.where[i + 1]) continue;
+      where = where.concat(' ', whereModel.rLogicOperand);
     }
-    return select;
+    return where;
   }
 
-  private getOperandOrSubQuery(where: string | QuerySelect): string {
-    if (typeof where === 'string') return where;
-    if (!Array.isArray(where) && typeof where === 'object') return `( ${this.build(where)}) `;
+  private getOperandOrSubQuery(where: string | number | QuerySelect, hasQuotes: boolean): string {
+    if (!Array.isArray(where) && typeof where === 'object')
+      return `( ${this.build(where)}) `;
+    if (typeof where === 'number' || typeof where === 'string')
+      return hasQuotes ? `'${where.toString()}'` : where.toString();
     throw new TypeError('operand should be a string or an object');
   }
 
-  private buildOrderBy(select: string, query: QuerySelect): string {
-    select += select.concat(' ORDER BY');
-    select += select.concat(' ', query.orderBy!.field);
-    select += select.concat(' ', query.orderBy!.direction);
-    return select;
+  private buildOrderBy(query: QuerySelect): string {
+    let orderBy = 'ORDER BY';
+    orderBy = orderBy.concat(' ORDER BY');
+    orderBy = orderBy.concat(' ', query.orderBy!.field);
+    orderBy = orderBy.concat(' ', query.orderBy!.direction);
+    return orderBy;
   }
 }

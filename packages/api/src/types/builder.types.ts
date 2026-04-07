@@ -13,8 +13,9 @@ export type QuerySelect = {
 export type OrderBy = { field: string, direction: 'ASC' | 'DESC' };
 
 export type WhereCondition = {
-  lOperand: string | QuerySelect,
-  rOperand: string | QuerySelect,
+  lOperand: string | number | QuerySelect,
+  rOperand: string | number | QuerySelect,
+  operandsQuotes: [boolean, boolean],
   operator: DBOperator,
   rLogicOperand?: string,
 };
@@ -22,6 +23,6 @@ export type WhereCondition = {
 export type QueryInsert = {
   table: string,
   fields: string[],
-  values: string[],
+  values: (string | number)[],
   returning: string[]
 };

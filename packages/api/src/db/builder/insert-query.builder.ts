@@ -19,7 +19,7 @@ export default class InsertQueryBuilder {
     return this;
   }
 
-  public withValues(...values: string[]): this {
+  public withValues(...values: (string | number)[]): this {
     this.query.values = values;
 
     return this;
