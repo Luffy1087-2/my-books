@@ -1,17 +1,15 @@
-import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { useState } from 'react';
 import { jwtDecode } from "jwt-decode";
-import { useContext } from "react";
-import { UserContext } from "../state/UserContext";
+import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { encryptToWebToken, CLIENT_ID, GoogleUserModel, UserEntityModel } from '@my-books/core';
+import useCreateUserIfNotExists from '../hook/useCreateUserIfNotExists.hook';
 
 export function SSOGoogleLoginButton(
-  {refreshAppState}: {
-    refreshAppState: (sessionData: UserEntityModel | null) => void
+  {setUserState: setUserState}: {
+    setUserState: (sessionData: UserEntityModel | null) => void
   }) {
-  const userContext = useContext(UserContext);
-  if (userContext && Object.keys(userContext).length > 1) {
-    return null;
-  }
+  const [ userToken, setUserToken ] = useState<string | null>(sessionStorage.getItem('userToken'));
+  useCreateUserIfNotExists(userToken, setUserState);
 
   const mapToUserEntityModel = (googleModel: GoogleUserModel): UserEntityModel => {
     return {
@@ -26,26 +24,24 @@ export function SSOGoogleLoginButton(
     const { credential } = res;
     if (!credential) throw new TypeError('login failed');
     const googleUserModel = jwtDecode(credential) satisfies GoogleUserModel;
-    const userEntityModel = mapToUserEntityModel(googleUserModel); // Here should be a mutation call
-    const userDataString = JSON.stringify(userEntityModel);
-    const encryptedUserToken = encryptToWebToken(userDataString);
-    console.log(encryptedUserToken);
-    sessionStorage.setItem('userToken', encryptedUserToken); // EntrityUserModel should be written
-    // Call Create Or Get USer
-    refreshAppState(userEntityModel);
+    const userEntityModel = mapToUserEntityModel(googleUserModel);
+    const userEntityString = JSON.stringify(userEntityModel);
+    const encryptedEntityModelToken = encryptToWebToken(userEntityString);
+    sessionStorage.setItem('userToken', encryptedEntityModelToken);
+    setUserToken(encryptedEntityModelToken);
   };
 
   const onError = () => {
-    refreshAppState(null);
+    setUserState(null);
     sessionStorage.removeItem('userToken');
   };
 
   return (
     <GoogleOAuthProvider clientId={CLIENT_ID}>
-      <GoogleLogin
-        onSuccess={onSuccess}
-        onError={onError}
-      />
+        <GoogleLogin
+          onSuccess={onSuccess}
+          onError={onError}
+        />
     </GoogleOAuthProvider>
   );
 }
