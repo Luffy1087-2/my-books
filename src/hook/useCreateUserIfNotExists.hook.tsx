@@ -13,6 +13,7 @@ const createOrGetMutation = gql`
       ... on User {
         email
         id
+        gId
         name
         role
       }
@@ -32,15 +33,12 @@ export default function useCreateUserIfNotExists(
   error: ErrorLike | undefined,
   data: CreareOrGetUserResponse
 } {
-  const [createOrGetUser, { loading, data, error }] = useMutation<CreareOrGetUserResponse>(createOrGetMutation, {
-    context: {
-      authorization: 'Bearer ' + userToken
-    }
-  });
+  const [createOrGetUser, { loading, data, error }] = useMutation<CreareOrGetUserResponse>(createOrGetMutation);
 
   useEffect(() => {
-    if (userToken)
-      createOrGetUser();
+    if (!userToken) return;
+    sessionStorage.setItem('userToken', userToken);
+    createOrGetUser();
   },
     [userToken, createOrGetUser]
   );

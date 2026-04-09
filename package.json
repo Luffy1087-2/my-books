@@ -14,7 +14,6 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "crypto-js": "^4.2.0",
-    "env-cmd": "^11.0.0",
     "jwt-decode": "^4.0.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
@@ -24,8 +23,8 @@
   },
   "scripts": {
     "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
-    "start:client": "env-cmd -f .env react-scripts start",
-    "start:server": "env-cmd -f .env node packages/api/dist/index.js",
+    "start:client": "react-scripts start",
+    "start:server": "node packages/api/dist/index.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

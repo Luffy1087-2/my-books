@@ -4,11 +4,10 @@ import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from "@react-oau
 import { encryptToWebToken, CLIENT_ID, GoogleUserModel, UserEntityModel } from '@my-books/core';
 import useCreateUserIfNotExists from '../hook/useCreateUserIfNotExists.hook';
 
-export function SSOGoogleLoginButton(
-  {setUserState: setUserState}: {
-    setUserState: (sessionData: UserEntityModel | null) => void
-  }) {
-  const [ userToken, setUserToken ] = useState<string | null>(sessionStorage.getItem('userToken'));
+export function SSOGoogleLoginButton({ setUserState }: {
+  setUserState: (sessionData: UserEntityModel | null) => void
+}) {
+  const [userToken, setUserToken] = useState<string | null>(null);
   useCreateUserIfNotExists(userToken, setUserState);
 
   const mapToUserEntityModel = (googleModel: GoogleUserModel): UserEntityModel => {
@@ -27,7 +26,6 @@ export function SSOGoogleLoginButton(
     const userEntityModel = mapToUserEntityModel(googleUserModel);
     const userEntityString = JSON.stringify(userEntityModel);
     const encryptedEntityModelToken = encryptToWebToken(userEntityString);
-    sessionStorage.setItem('userToken', encryptedEntityModelToken);
     setUserToken(encryptedEntityModelToken);
   };
 
@@ -38,10 +36,10 @@ export function SSOGoogleLoginButton(
 
   return (
     <GoogleOAuthProvider clientId={CLIENT_ID}>
-        <GoogleLogin
-          onSuccess={onSuccess}
-          onError={onError}
-        />
+      <GoogleLogin
+        onSuccess={onSuccess}
+        onError={onError}
+      />
     </GoogleOAuthProvider>
   );
 }
