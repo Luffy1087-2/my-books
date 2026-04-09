@@ -96,6 +96,7 @@ const addQueryFuncs = () => {
 const addMutationFuncs = () => {
 
   builder.addMutationFunc('createUserIfNotExists');
+  builder.addArgs({ name: 'googleToken', type: 'String', isMandatory: true });
   builder.addReturnType({ type: 'UserOrErrorResult', isMandatory: true });
 
   builder.addMutationFunc('createBook');

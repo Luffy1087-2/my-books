@@ -7,8 +7,8 @@ export const resolvers = {
   Query: {
   },
   Mutation: {
-    createUserIfNotExists: async (parent: any, args: any, context: { user: UserEntityModel }): Promise<UserEntityModel | ErrorResponse> => {
-      return await createUserIfNotExists(context.user);
+    createUserIfNotExists: async (parent: any, { googleToken }: { googleToken: string }): Promise<UserEntityModel | ErrorResponse> => {
+      return await createUserIfNotExists(googleToken);
     }
   },
   UserOrErrorResult: {
