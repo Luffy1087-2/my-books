@@ -8,7 +8,7 @@ import { getUserTokenHandler } from './handlers/core.handler.js';
 import { UserEntityModel } from '@my-books/core';
 import { getEnvPath } from './utils/env.utils.js';
 
-dotenv.config({ path: getEnvPath(import.meta.url), debug: true });
+dotenv.config({ path: getEnvPath(import.meta.url), debug: true, encoding: 'utf8' });
 const server = new ApolloServer<{ user: UserEntityModel | null }>({ typeDefs, resolvers });
 const { url } = await startStandaloneServer(server, {
   context: async ({ req }) => await getUserTokenHandler(req),
