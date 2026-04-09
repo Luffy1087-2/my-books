@@ -7,31 +7,20 @@ import useCreateUserIfNotExists from '../hook/useCreateUserIfNotExists.hook';
 export function SSOGoogleLoginButton({ setUserState }: {
   setUserState: (sessionData: UserEntityModel | null) => void
 }) {
-  const [userToken, setUserToken] = useState<string | null>(null);
-  useCreateUserIfNotExists(userToken, setUserState);
-
-  const mapToUserEntityModel = (googleModel: GoogleUserModel): UserEntityModel => {
-    return {
-      gId: googleModel.sub,
-      email: googleModel.email,
-      name: googleModel.given_name,
-      role: 'admin'
-    };
-  }
+  const [googleToken, setGoogleToken] = useState<string | null>(null);
+  useCreateUserIfNotExists(googleToken, setUserState);
 
   const onSuccess = async (res: CredentialResponse) => {
     const { credential } = res;
     if (!credential) throw new TypeError('login failed');
     const googleUserModel = jwtDecode(credential) satisfies GoogleUserModel;
-    const userEntityModel = mapToUserEntityModel(googleUserModel);
-    const userEntityString = JSON.stringify(userEntityModel);
-    const encryptedEntityModelToken = encryptToWebToken(userEntityString);
-    setUserToken(encryptedEntityModelToken);
+    const googleJsonString = JSON.stringify(googleUserModel);
+    const encryptedGoogleToken = encryptToWebToken(googleJsonString);
+    setGoogleToken(encryptedGoogleToken);
   };
 
   const onError = () => {
     setUserState(null);
-    sessionStorage.removeItem('userToken');
   };
 
   return (

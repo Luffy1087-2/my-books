@@ -8,8 +8,8 @@ type CreareOrGetUserResponse = {
 } | null | undefined;
 
 const createOrGetMutation = gql`
-  mutation CreateOrGetUser {
-    createUserIfNotExists {
+  mutation CreateOrGetUser($googleToken: String!) {
+    createUserIfNotExists(googleToken: $googleToken) {
       ... on User {
         email
         id
@@ -26,22 +26,29 @@ const createOrGetMutation = gql`
 `;
 
 export default function useCreateUserIfNotExists(
-  userToken: string | null,
+  googleToken: string | null,
   setUserState: (user: UserEntityModel) => void
 ): {
   loading: boolean,
   error: ErrorLike | undefined,
   data: CreareOrGetUserResponse
 } {
-  const [createOrGetUser, { loading, data, error }] = useMutation<CreareOrGetUserResponse>(createOrGetMutation);
+  const [createOrGetUser, { loading, data, error }] = useMutation<CreareOrGetUserResponse>(createOrGetMutation, {
+    context: {
+      headers: {
+        'X-Auth-Bypass': 'true',
+      },
+    },
+    variables: {
+      googleToken: googleToken,
+    },
+  });
 
   useEffect(() => {
-    if (!userToken) return;
-    // Token from google
-    sessionStorage.setItem('userToken', userToken);
+    if (!googleToken) return;
     createOrGetUser();
   },
-    [userToken, createOrGetUser]
+    [googleToken, createOrGetUser]
   );
 
   useEffect(() => {
