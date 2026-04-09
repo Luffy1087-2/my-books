@@ -8,6 +8,6 @@ export type DBUser = {
 }
 
 export type ErrorResponse = {
-  code: string,
-  message: string
+  errorCode?: string,
+  errorMessage?: string
 }

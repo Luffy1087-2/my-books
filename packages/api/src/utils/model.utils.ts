@@ -5,8 +5,8 @@ export function hasError(data: any) {
   const error: ErrorResponse = data;
   return error
     && error.constructor === Object
-    && error.message
-    && error.message.length;
+    && error.errorMessage
+    && error.errorMessage.length;
 }
 
 export function getErrorModel(message: string): ErrorResponse {
@@ -14,8 +14,8 @@ export function getErrorModel(message: string): ErrorResponse {
     return JSON.parse(message) as ErrorResponse;
   } catch {
     return {
-      message: 'error parsing message',
-      code: 'generic error'
+      errorMessage: 'error parsing message, please check internet or db connection',
+      errorCode: 'generic error'
     };
   }
 }

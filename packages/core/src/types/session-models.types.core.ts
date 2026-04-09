@@ -13,4 +13,9 @@ export type UserEntityModel = {
   name: string,
   email: string,
   role: 'admin' | 'user'
-};
+} & ErrorResponse;
+
+type ErrorResponse = {
+  errorCode?: string,
+  errorMessage?: string
+}

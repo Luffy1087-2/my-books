@@ -64,8 +64,8 @@ const addTypes = () => {
   builder.addType({
     name: 'ErrorResponse',
     fields: {
-      'code': { type: 'String', isMandatory: false },
-      'message': { type: 'String', isMandatory: true }
+      'errorCode': { type: 'String', isMandatory: false },
+      'errorMessage': { type: 'String', isMandatory: true }
     }
   })
 

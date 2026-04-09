@@ -18,8 +18,8 @@ const createOrGetMutation = gql`
         role
       }
       ... on ErrorResponse {
-        code
-        message
+        errorCode
+        errorMessage
       }
     }
   }
@@ -37,6 +37,7 @@ export default function useCreateUserIfNotExists(
 
   useEffect(() => {
     if (!userToken) return;
+    // Token from google
     sessionStorage.setItem('userToken', userToken);
     createOrGetUser();
   },
@@ -46,8 +47,10 @@ export default function useCreateUserIfNotExists(
   useEffect(() => {
     if (!data) return;
     const user = data.createUserIfNotExists;
+    if (user.errorCode) throw new TypeError(user.errorMessage);
     const entityJsonString = JSON.stringify(user);
     const entityToken = encryptToWebToken(entityJsonString);
+    // Override the Google token with the application token
     sessionStorage.setItem('userToken', entityToken);
     setUserState(user);
   },
