@@ -34,10 +34,11 @@ const addTypes = () => {
   builder.addType({
     name: 'User',
     fields: {
-      'id': { type: 'String', isMandatory: true },
-      'name': { type: 'String', isMandatory: true },
-      'email': { type: 'String', isMandatory: true },
-      'role': { type: 'String', isMandatory: true }
+      id: { type: 'String', isMandatory: true },
+      gId: { type: 'String', isMandatory: true },
+      name: { type: 'String', isMandatory: true },
+      email: { type: 'String', isMandatory: true },
+      role: { type: 'String', isMandatory: true }
     }
   });
 
