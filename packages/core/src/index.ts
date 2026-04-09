@@ -46,5 +46,5 @@ export function decryptWebTokenData<R>(encodedString: string): R | null {
   }
 };
 
-export * from './session-models.core.js';
+export * from './types/session-models.types.core.js';
 

@@ -50,8 +50,8 @@ async function createUserIfNotExists(user: UserEntityModel): Promise<UserEntityM
       })
       .build();
     const data = await DbService.query(select);
-    if (data?.rowCount === 1) {
-      return mapToUserEntityModel(data!.rows[0]);
+    if (data.rowCount === 1) {
+      return mapToUserEntityModel(data.rows[0]);
     }
     const iData = await insertUser(user, await isUsersTableEmpty());
     return iData;
