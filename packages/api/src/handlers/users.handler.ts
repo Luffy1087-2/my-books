@@ -1,4 +1,4 @@
-import { UserEntityModel } from '@my-books/core';
+import { decryptWebTokenData, GoogleUserModel, UserEntityModel } from '@my-books/core';
 import { DBUser, ErrorResponse } from '../types/data.types.js';
 import { exceptionStringified, getErrorModel } from '../utils/model.utils.js';
 import SelectQueryBuilder from '../db/builder/select-query.builder.js';
@@ -19,11 +19,11 @@ async function isUsersTableEmpty(): Promise<boolean> {
   }
 }
 
-async function insertUser(user: UserEntityModel, isAdmin: boolean): Promise<UserEntityModel> {
+async function insertUser(user: GoogleUserModel, isAdmin: boolean): Promise<UserEntityModel> {
   try {
     const query = new InsertQueryBuilder('users')
       .withFields('gId', 'name', 'email', 'u_role')
-      .withValues(user.gId, user.name, user.email, Number(isAdmin))
+      .withValues(user.sub, user.given_name, user.email, Number(isAdmin))
       .withReturning('id', 'gId', 'name', 'email', 'u_role')
       .build();
     const data = await DbService.query(query);
@@ -36,16 +36,17 @@ async function insertUser(user: UserEntityModel, isAdmin: boolean): Promise<User
   }
 }
 
-async function createUserIfNotExists(user: UserEntityModel): Promise<UserEntityModel | ErrorResponse> {
+async function createUserIfNotExists(googleToken: string): Promise<UserEntityModel | ErrorResponse> {
   try {
-    if (!user.gId.length) throw new TypeError('session is not valid');
+    const user = decryptWebTokenData<GoogleUserModel>(googleToken);
+    if (!user?.sub.length) throw new TypeError('session is not valid');
     const query = new SelectQueryBuilder('users');
     const select = query
       .withFields('id', '"gId"', 'name', 'email', 'u_role')
       .withWhere({
         lOperand: '"gId"',
         operator: '=',
-        rOperand: user.gId,
+        rOperand: user.sub,
         operandsQuotes: [false, true]
       })
       .build();
