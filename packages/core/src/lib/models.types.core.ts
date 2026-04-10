@@ -1,4 +1,3 @@
-
 export type GoogleUserModel = {
   sub: string,
   family_name: string;

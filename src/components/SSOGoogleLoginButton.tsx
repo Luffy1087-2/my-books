@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { jwtDecode } from "jwt-decode";
 import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import { encryptToWebToken, CLIENT_ID, GoogleUserModel, UserEntityModel } from '@my-books/core';
+import { encryptToWebToken, getEnvByKey, GoogleUserModel, UserEntityModel } from '@my-books/core';
 import useCreateUserIfNotExists from '../hook/useCreateUserIfNotExists.hook';
 
 export function SSOGoogleLoginButton({ setUserState }: {
@@ -24,7 +24,7 @@ export function SSOGoogleLoginButton({ setUserState }: {
   };
 
   return (
-    <GoogleOAuthProvider clientId={CLIENT_ID}>
+    <GoogleOAuthProvider clientId={getEnvByKey('SSO_CLIENT_ID')}>
       <GoogleLogin
         onSuccess={onSuccess}
         onError={onError}
