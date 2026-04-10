@@ -1,6 +1,6 @@
+import { cleanParam } from '@my-books/core';
 import { Book } from '../types/db.types.js';
 import { ErrorResponse } from '../types/data.types.js';
-import { cleanParam } from '../utils/string.utils.js';
 import { getErrorModel, hasError } from '../utils/model.utils.js';
 import SelectQueryBuilder from "../db/builder/select-query.builder.js";
 import InsertQueryBuilder from "../db/builder/insert-query.builder.js";

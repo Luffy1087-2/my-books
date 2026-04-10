@@ -1,5 +1,6 @@
+import { trimLines } from '@my-books/core';
 import { GqlFunc, GqlArg, GqlFieldDataType, GqlQuery, GqlMutation, GqlType, GqlUnion, GqlFieldType, ReturnModel } from '../../types/gql.builder.types.js';
-import { trimLines } from '../../utils/string.utils.js';
+
 
 class GqlFuncBuilder {
   private parent: TypeDefsBuilder;

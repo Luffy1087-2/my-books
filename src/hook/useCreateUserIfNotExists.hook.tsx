@@ -1,6 +1,6 @@
 import { ErrorLike, gql } from '@apollo/client';
 import { useMutation } from '@apollo/client/react';
-import { encryptToWebToken, UserEntityModel } from '@my-books/core';
+import { createBypassAuthToken, encryptToWebToken, UserEntityModel } from '@my-books/core';
 import { useEffect } from 'react';
 
 type CreareOrGetUserResponse = {
@@ -36,7 +36,7 @@ export default function useCreateUserIfNotExists(
   const [createOrGetUser, { loading, data, error }] = useMutation<CreareOrGetUserResponse>(createOrGetMutation, {
     context: {
       headers: {
-        'X-Auth-Bypass': 'true',
+        'X-Auth-Bypass-Token': createBypassAuthToken()
       },
     },
     variables: {

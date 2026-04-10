@@ -1,10 +1,22 @@
 import { IncomingMessage } from "http";
-import { decryptWebTokenData, UserEntityModel } from '@my-books/core';
+import { BypassAuthModel, decryptWebTokenData, getEnvByKey, UserEntityModel } from '@my-books/core';
 import { isUserEntityValid } from '../utils/model.utils.js';
 
+function isValidByPassToken(bypassAuthToken: string | string[]) {
+  if (typeof bypassAuthToken !== 'string' || !bypassAuthToken.length) throw new TypeError('bypassAuthToken is not valid');
+  const model = decryptWebTokenData<BypassAuthModel>(bypassAuthToken);
+  if (!model) throw new TypeError('BypassAuthModel is not valid');
+  const endTime = Date.now();
+  const isExpired = endTime - model.startTime > 5000;
+  if (isExpired) throw new RangeError('bypassAuthToken is expired');
+  if (model.pw !== getEnvByKey('BYPASS_PROTECTION_PW')) throw new Error('protection is not guaranteed');
+
+  return true;
+}
+
 export function getUserTokenHandler(req: IncomingMessage) {
-  const shouldBypass = req.headers['x-auth-bypass'] === 'true';
-  if (shouldBypass) return {};
+  const bypassAuthToken = req.headers['x-auth-bypass-token'];
+  if (bypassAuthToken && isValidByPassToken(bypassAuthToken)) return {};
   const tokenFromHeader = req.headers["authorization"];
   if (!tokenFromHeader) throw new TypeError('authorization header is not present');
   const encodedToken = tokenFromHeader!.startsWith('Bearer ') ? tokenFromHeader!.toString().split(' ')[1] : undefined;

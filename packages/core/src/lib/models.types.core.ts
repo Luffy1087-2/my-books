@@ -18,3 +18,8 @@ type ErrorResponse = {
   errorCode?: string,
   errorMessage?: string
 }
+
+export type BypassAuthModel = {
+  pw: string,
+  startTime: number
+};
