@@ -3,10 +3,10 @@ export function fileUrlToPath(fileUrl: string): string {
   let filePath = fileUrl;
   if (!fileUrl.startsWith('file:')) throw new Error('prefix is not satisfied');
   filePath = filePath.replace('file:', '');
-  const hostWays = [`//localhost`, `///`];
-  const index = hostWays.map((hw: string) => filePath.startsWith(hw)).findIndex(m => m);
+  const prefixes = [`//localhost`, `///`];
+  const index = prefixes.map((prx: string) => filePath.startsWith(prx)).findIndex(isTrue => isTrue);
   if (index == -1) throw new Error('format error');
-  filePath = filePath.replace(hostWays[index]!, '');
+  filePath = filePath.replace(prefixes[index]!, '');
   filePath = filePath.replace(new RegExp('/', 'g'), sep);
 
   return filePath;
