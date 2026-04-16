@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import Layout from '../components/Layout.component';
 
 export const router = createBrowserRouter([
@@ -6,6 +6,12 @@ export const router = createBrowserRouter([
     path: '/',
     element: <Layout />,
     children: [{
+      index: true,
+      element: (<Navigate to={'/books'} replace />)
+    }, {
+      path: 'users',
+      element: (<div>Users</div>)
+    }, {
       path: 'books',
       element: (<div>My-Books</div>)
     }, {
@@ -13,5 +19,5 @@ export const router = createBrowserRouter([
       element: (<div>Add new Book</div>)
     }]
   },
-  { path: '*', element: (<div>Errore</div>) }
+  { path: '*', element: (<Navigate to={'/books'} replace />) }
 ]);
