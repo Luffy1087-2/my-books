@@ -7,7 +7,7 @@ export default function NavBar() {
 
   return (
     <ul>
-      <li>
+      <li className='bg-red-500 text-2xl'>
         <Link to={"/books"}>Books</Link>
       </li>
       <li style={{ display: user ? 'list-item' : 'none' }}>

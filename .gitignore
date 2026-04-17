@@ -30,3 +30,4 @@ packages/core/dist
 packages/api/dist
 tsconfig.tsbuildinfo
 *.pem
+public/index.css
