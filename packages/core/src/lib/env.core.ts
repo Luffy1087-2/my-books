@@ -1,8 +1,16 @@
 import { dirname, fileUrlToPath } from './polyfill.core.js';
 
+function getEnvSource() {
+  try {
+    return process.env;
+  } catch {
+    return (import.meta as any).env
+  }
+}
+
 export function getEnvByKey(key: string): string {
-  const envs = process.env;
-  const varByKey = envs['REACT_APP_' + key] ?? envs[key];
+  const envs = getEnvSource();
+  const varByKey = envs['VITE_' + key] ?? envs[key];
   if (!varByKey) throw new TypeError(key + ' is not present');
 
   return varByKey;
