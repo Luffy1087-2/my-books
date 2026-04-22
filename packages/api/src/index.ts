@@ -5,12 +5,13 @@ import { startStandaloneServer } from '@apollo/server/standalone';
 import { typeDefs } from './graphql/typeDefs.gql.js';
 import { resolvers } from './graphql/resolvers.gql.js';
 import { getUserTokenHandler } from './handlers/core.handler.js';
-import { getEnvPath, UserEntityModel } from '@my-books/core';
+import { getEnvPath } from './utils/env.utils.js';
+import { ContextData } from './types/data.types.js';
 
 dotenv.config({ path: getEnvPath(import.meta.url), debug: true, encoding: 'utf8' });
-const server = new ApolloServer<{ user: UserEntityModel | null } | {}>({ typeDefs, resolvers });
+const server = new ApolloServer<ContextData | {}>({ typeDefs, resolvers });
 const { url } = await startStandaloneServer(server, {
-  context: async ({ req }) => await getUserTokenHandler(req),
+  context: async ({ req, res }) => await getUserTokenHandler(req, res),
   listen: {
     port: 3770
   },

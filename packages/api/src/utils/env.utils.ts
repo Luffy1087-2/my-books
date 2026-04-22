@@ -1,15 +1,8 @@
-import { dirname, fileUrlToPath } from './polyfill.core.js';
-
-function getEnvSource() {
-  try {
-    return process.env;
-  } catch {
-    return (import.meta as any).env
-  }
-}
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 export function getEnvByKey(key: string): string {
-  const envs = getEnvSource();
+  const envs = typeof process !== 'undefined' ? process.env : (import.meta as any).env
   const varByKey = envs['VITE_' + key] ?? envs[key];
   if (!varByKey) throw new TypeError(key + ' is not present');
 
@@ -17,7 +10,7 @@ export function getEnvByKey(key: string): string {
 }
 
 export function getEnvPath(scriptUrl: string, envDir: string = 'my-books') {
-  const filePath = fileUrlToPath(scriptUrl);
+  const filePath = fileURLToPath(scriptUrl);
   const dirName = dirname(filePath);
   const rightPath = dirName.substring(0, dirName.indexOf(envDir) + envDir.length + 1) + '.env';
 

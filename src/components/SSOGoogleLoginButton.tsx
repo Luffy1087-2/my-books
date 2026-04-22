@@ -1,22 +1,19 @@
 import { useState } from 'react';
-import { jwtDecode } from "jwt-decode";
 import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import { encryptToWebToken, getEnvByKey, GoogleUserModel, UserEntityModel } from '@my-books/core';
+import { UserEntityModel } from '@my-books/core';
 import useCreateUserIfNotExists from '../hook/useCreateUserIfNotExists.hook';
 
+const ssoGoogleClientId = '193354855911-bi08a0fq7dob3jh6asgg06a93d4l1ser.apps.googleusercontent.com';
 export function SSOGoogleLoginButton({ setUserState }: {
   setUserState: (sessionData: UserEntityModel | null) => void
 }) {
-  const [googleToken, setGoogleToken] = useState<string | null>(null);
-  useCreateUserIfNotExists(googleToken, setUserState);
+  const [jwtGoogleToken, setJwtGoogleToken] = useState<string | null>(null);
+  useCreateUserIfNotExists(jwtGoogleToken, setUserState);
 
   const onSuccess = async (res: CredentialResponse) => {
     const { credential } = res;
     if (!credential) throw new TypeError('login failed');
-    const googleUserModel = jwtDecode(credential) satisfies GoogleUserModel;
-    const googleJsonString = JSON.stringify(googleUserModel);
-    const encryptedGoogleToken = encryptToWebToken(googleJsonString);
-    setGoogleToken(encryptedGoogleToken);
+    setJwtGoogleToken(credential);
   };
 
   const onError = () => {
@@ -24,10 +21,11 @@ export function SSOGoogleLoginButton({ setUserState }: {
   };
 
   return (
-    <GoogleOAuthProvider clientId={getEnvByKey('SSO_CLIENT_ID')}>
+    <GoogleOAuthProvider clientId={ssoGoogleClientId}>
       <GoogleLogin
         onSuccess={onSuccess}
         onError={onError}
+        ux_mode='redirect'
       />
     </GoogleOAuthProvider>
   );

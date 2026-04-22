@@ -1,6 +1,5 @@
 import CryptoJS from 'crypto-js';
-import { getEnvByKey } from './env.core.js';
-import { BypassAuthModel } from './models.types.core.js';
+import { getEnvByKey } from './env.utils.js';
 
 export function encryptToWebToken(dataString: string): string {
   const encryptedString = CryptoJS.AES.encrypt(dataString, getEnvByKey('SSO_SECRET_KEY'));
@@ -28,13 +27,3 @@ export function decryptWebTokenData<R>(encodedString: string): R | null {
     return null;
   }
 };
-
-export function createBypassAuthToken(): string {
-  const now = Date.now();
-  const model: BypassAuthModel = {
-    startTime: now,
-    pw: getEnvByKey('BYPASS_PROTECTION_PW')
-  };
-  const encryptedToken = encryptToWebToken(JSON.stringify(model));
-  return encryptedToken;
-}

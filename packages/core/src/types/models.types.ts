@@ -14,12 +14,7 @@ export type UserEntityModel = {
   role: 'admin' | 'user'
 } & ErrorResponse;
 
-type ErrorResponse = {
+export type ErrorResponse = {
   errorCode?: string,
   errorMessage?: string
 }
-
-export type BypassAuthModel = {
-  pw: string,
-  startTime: number
-};

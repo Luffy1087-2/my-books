@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { getEnvByKey } from '@my-books/core';
+import { getEnvByKey } from '../utils/env.utils.js';
 
 export default class DbService {
   private static pool: Pool | undefined;
@@ -24,5 +24,4 @@ export default class DbService {
       port: Number(getEnvByKey('DB_PORT'))
     });
   }
-
 }

@@ -3,9 +3,9 @@ import NavBar from './NavBar.component';
 import { ApolloProvider } from '@apollo/client/react';
 import { clientService } from '../service/client.service';
 import { UserContext } from '../state/UserContext';
-import { UserEntityModel } from '@my-books/core';
 import { useContext, useState } from 'react';
 import UserBar from './UserBar.component';
+import { UserEntityModel } from '@my-books/core';
 
 export default function Layout() {
   const userContext = useContext(UserContext);

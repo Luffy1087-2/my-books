@@ -1,9 +1,12 @@
-import { decryptWebTokenData, GoogleUserModel, UserEntityModel } from '@my-books/core';
-import { DBUser, ErrorResponse } from '../types/data.types.js';
+import { GoogleUserModel, UserEntityModel } from '@my-books/core';
+import { ContextData, DBUser, ErrorResponse } from '../types/data.types.js';
 import { exceptionStringified, getErrorModel } from '../utils/model.utils.js';
 import SelectQueryBuilder from '../db/builder/select-query.builder.js';
 import InsertQueryBuilder from '../db/builder/insert-query.builder.js';
 import DbService from '../services/db.service.js';
+import { tryGetGoogleUserModelFromJwtToken } from './core.handler.js';
+import { encryptToWebToken } from '../utils/crypto.utils.js';
+import { IncomingMessage, ServerResponse } from 'http';
 
 async function isUsersTableEmpty(): Promise<boolean> {
   try {
@@ -36,25 +39,28 @@ async function insertUser(user: GoogleUserModel, isAdmin: boolean): Promise<User
   }
 }
 
-async function createUserIfNotExists(googleToken: string): Promise<UserEntityModel | ErrorResponse> {
+async function createUserIfNotExists(contextData: ContextData): Promise<UserEntityModel | ErrorResponse> {
   try {
-    const user = decryptWebTokenData<GoogleUserModel>(googleToken);
-    if (!user?.sub.length) throw new TypeError('session is not valid');
+    const jwtToken = contextData.req.headers['x-jwt-google-auth-token'];
+    const googleUserModel = tryGetGoogleUserModelFromJwtToken(jwtToken);
     const query = new SelectQueryBuilder('users');
     const select = query
       .withFields('id', '"gId"', 'name', 'email', 'u_role')
       .withWhere({
         lOperand: '"gId"',
         operator: '=',
-        rOperand: user.sub,
+        rOperand: googleUserModel.sub,
         operandsQuotes: [false, true]
       })
       .build();
     const data = await DbService.query(select);
     if (data.rowCount === 1) {
-      return mapToUserEntityModel(data.rows[0]);
+      const user = mapToUserEntityModel(data.rows[0]);
+      setAuthorizationHeader(user, contextData);
+      return user;
     }
-    const iData = await insertUser(user, await isUsersTableEmpty());
+    const iData = await insertUser(googleUserModel, await isUsersTableEmpty());
+    setAuthorizationHeader(iData, contextData);
     return iData;
   } catch (e: any) {
     return getErrorModel(e.message);
@@ -71,6 +77,12 @@ function mapToUserEntityModel(dbUser: DBUser, overrideRole: 1 | 2 | undefined = 
     email: dbUser.email,
     role
   };
+}
+
+function setAuthorizationHeader(data: object, ctx: ContextData) {
+  const userEntityToken = encryptToWebToken(JSON.stringify(data));
+  ctx.res.setHeader('Access-Control-Expose-Headers', 'Authorization');
+  ctx.res.setHeader('Authorization', `Bearer ${userEntityToken}`);
 }
 
 export { createUserIfNotExists };

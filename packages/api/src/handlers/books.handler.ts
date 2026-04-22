@@ -1,10 +1,10 @@
-import { cleanParam } from '@my-books/core';
 import { Book } from '../types/db.types.js';
 import { ErrorResponse } from '../types/data.types.js';
 import { getErrorModel, hasError } from '../utils/model.utils.js';
 import SelectQueryBuilder from "../db/builder/select-query.builder.js";
 import InsertQueryBuilder from "../db/builder/insert-query.builder.js";
 import DbService from "../services/db.service.js";
+import { cleanParam } from '../utils/string.utils.js';
 
 export const getBooks = async (): Promise<Book[]> => {
   const select = new SelectQueryBuilder('books')
