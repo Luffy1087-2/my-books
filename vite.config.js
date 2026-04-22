@@ -11,8 +11,10 @@ export default defineConfig(() => {
     },
     plugins: [ tailwindcss(), react(), basicSsl()],
     server: {
+      host: true,
+      https: true,
       key: fs.readFileSync('localhost-key.pem'),
       cert: fs.readFileSync('localhost.pem'),
-    }
+    },
   };
 });

@@ -13,10 +13,10 @@ export const router = createBrowserRouter([
       element: (<div>Users</div>)
     }, {
       path: 'books',
-      element: (<div>My-Books</div>)
+      element: (<div>My-Books Content</div>)
     }, {
       path: 'add-new-book',
-      element: (<div>Add new Book</div>)
+      element: (<div>Add new Book Content</div>)
     }]
   },
   { path: '*', element: (<Navigate to={'/books'} replace />) }
