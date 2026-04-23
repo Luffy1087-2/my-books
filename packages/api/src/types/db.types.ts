@@ -1,9 +1,10 @@
-export type UserTable = {
+export type DBUser = {
   id: number,
   name: string,
   email: string,
-  u_role: 0 | 1
-};
+  gId: string,
+  u_role: 1 | 2
+}
 
 export type Book = {
   id: number,

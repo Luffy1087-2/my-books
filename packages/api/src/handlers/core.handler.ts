@@ -1,21 +1,31 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { GoogleUserModel, isGoogleUserModelValid, UserEntityModel } from '@my-books/core';
+import { isGoogleUserModelValid, UserEntityModel } from '@my-books/core';
 import { isUserEntityValid } from '../utils/model.utils.js';
-import { jwtDecode } from 'jwt-decode';
 import { decryptWebTokenData } from '../utils/crypto.utils.js';
+import { userDtoToGoogleUserModel } from '../map/user-api.map.js';
 
-export function tryGetGoogleUserModelFromJwtToken(jwtToken: string | string[] | undefined) {
-  if (typeof jwtToken !== 'string' || !jwtToken.length) throw new TypeError('jwtToken is not valid');
-  const model = jwtDecode(jwtToken) as GoogleUserModel;
-  if (!model) throw new TypeError('jwtToken is not valid');
-  if (!isGoogleUserModelValid(model)) throw new TypeError('GoogleUserModel is not valid');
+export async function tryGetGoogleUserModelByAccessToken(accessToken: string | string[] | undefined) {
+  if (typeof accessToken !== 'string' || !accessToken.length) throw new TypeError('accessToken is not valid');
+  const res = await fetch('https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses', {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Accept: 'application/json',
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`Google api call error: ${res.status}`);
+  }
+  const model = await res.json();
+  const googleModel = userDtoToGoogleUserModel(model);
+  if (!isGoogleUserModelValid(googleModel)) throw new TypeError('GoogleUserModel is not valid');
 
-  return model;
+  return googleModel;
 }
 
 export function getUserTokenHandler(req: IncomingMessage, res: ServerResponse<IncomingMessage>) {
-  const jwtToken = req.headers['x-jwt-google-auth-token'];
-  if (jwtToken?.length) return { req, res };
+  const accessToken = req.headers['x-google-access-token'];
+  if (accessToken?.length) return { req, res };
   const tokenFromHeader = req.headers["authorization"];
   if (!tokenFromHeader) throw new TypeError('authorization header is not present');
   const userEntityEncodedToken = tokenFromHeader!.startsWith('Bearer ') ? tokenFromHeader!.toString().split(' ')[1] : undefined;

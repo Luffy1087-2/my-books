@@ -1,14 +1,6 @@
 import { UserEntityModel } from '@my-books/core';
 import { IncomingMessage, ServerResponse } from 'http';
 
-export type DBUser = {
-  id: number,
-  name: string,
-  email: string,
-  gId: string,
-  u_role: 1 | 2
-}
-
 export type ErrorResponse = {
   errorCode?: string,
   errorMessage?: string
