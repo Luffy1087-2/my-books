@@ -47,31 +47,57 @@ async function insertUser(user: GoogleUserModel, isAdmin: boolean): Promise<User
 
 async function createUserIfNotExists(contextData: ContextData): Promise<UserEntityModel | ErrorResponse> {
   try {
-    const jwtToken = contextData.req.headers['x-google-access-token'];
-    const googleUserModel = await tryGetGoogleUserModelByAccessToken(jwtToken);
-    const query = new SelectQueryBuilder('users');
-    const select = query
-      .withFields('id', '"gId"', 'name', 'email', 'u_role')
-      .withWhere({
-        lOperand: '"gId"',
-        operator: '=',
-        rOperand: googleUserModel.sub,
-        operandsQuotes: [false, true]
-      })
-      .build();
-    const data = await DbService.query(select);
-    if (data.rowCount === 1) {
-      const user = dbUserToUserEntityModel(data.rows[0]);
-      setAuthorizationHeader(user, contextData);
-      return user;
-    }
-    const iData = await insertUser(googleUserModel, await isUsersTableEmpty());
-    setAuthorizationHeader(iData, contextData);
-    return iData;
+    // Select
+    const accessToken = contextData.req.headers['x-google-access-token'];
+    const googleUserModel = await tryGetGoogleUserModelByAccessToken(accessToken);
+    const selectedUserOrDefault = await tryGetUserByGoogleId(googleUserModel.sub, contextData);
+    if (selectedUserOrDefault) return selectedUserOrDefault;
+
+    // Insert
+    const insertedRow = await insertUser(googleUserModel, await isUsersTableEmpty());
+    setAuthorizationHeader(insertedRow, contextData);
+    return insertedRow;
   } catch (e: any) {
     return getErrorModel(e.message);
   }
 };
+
+async function tryGetUserByGoogleId(gId: string, contextData: ContextData) {
+  const query = new SelectQueryBuilder('users');
+  const select = query
+    .withFields('id', '"gId"', 'name', 'email', 'u_role')
+    .withWhere({
+      lOperand: '"gId"',
+      operator: '=',
+      rOperand: gId,
+      operandsQuotes: [false, true]
+    })
+    .build();
+  const data = await DbService.query(select);
+  if (data.rowCount !== 1) {
+    return null;
+  }
+  const user = dbUserToUserEntityModel(data.rows[0]);
+  setAuthorizationHeader(user, contextData);
+  return user;
+}
+
+async function tryGetUserEntityById(id: string) {
+  const query = new SelectQueryBuilder('users');
+  const select = query
+    .withFields('id', '"gId"', 'name', 'email', 'u_role')
+    .withWhere({
+      lOperand: 'id',
+      operator: '=',
+      rOperand: id,
+      operandsQuotes: [false, true]
+    })
+    .build();
+  const data = await DbService.query(select);
+  if (data.rowCount !== 1) throw new RangeError('user cannot be selected');
+  const user = dbUserToUserEntityModel(data.rows[0]);
+  return user;
+}
 
 function setAuthorizationHeader(data: object, ctx: ContextData) {
   const userEntityToken = encryptToWebToken(JSON.stringify(data));
@@ -79,4 +105,4 @@ function setAuthorizationHeader(data: object, ctx: ContextData) {
   ctx.res.setHeader('Authorization', `Bearer ${userEntityToken}`);
 }
 
-export { createUserIfNotExists };
+export { createUserIfNotExists, tryGetUserEntityById };

@@ -67,7 +67,7 @@ const addTypes = () => {
       'errorCode': { type: 'String', isMandatory: false },
       'errorMessage': { type: 'String', isMandatory: true }
     }
-  })
+  });
 
 };
 
@@ -90,6 +90,9 @@ const addQueryFuncs = () => {
     { name: 'author', type: 'String' },
   );
   builder.addReturnType({ type: 'BookOrErrorResult', isMandatory: true });
+
+  builder.addQueryFunc('getUserByUserToken');
+  builder.addReturnType({ type: 'UserOrErrorResult', isMandatory: true });
 
 };
 

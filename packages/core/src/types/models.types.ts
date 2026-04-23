@@ -7,7 +7,7 @@ export type GoogleUserModel = {
 };
 
 export type UserEntityModel = {
-  id?: number,
+  id: number,
   gId: string,
   name: string,
   email: string,

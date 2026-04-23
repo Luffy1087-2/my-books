@@ -13,9 +13,9 @@ export default function Layout() {
   const [user, setUserState] = useState<UserEntityModel | null>(userContext);
 
   return (
-    <GoogleOAuthProvider clientId={'193354855911-bi08a0fq7dob3jh6asgg06a93d4l1ser.apps.googleusercontent.com'}>
-      <UserContext.Provider value={user}>
-        <ApolloProvider client={clientService}>
+    <ApolloProvider client={clientService}>
+      <GoogleOAuthProvider clientId={'193354855911-bi08a0fq7dob3jh6asgg06a93d4l1ser.apps.googleusercontent.com'}>
+        <UserContext.Provider value={user}>
           <div>
             <header>
               <UserBar user={user} setUserState={setUserState} />
@@ -28,8 +28,8 @@ export default function Layout() {
               <p>&copy; 2026 My App</p>
             </footer>
           </div>
-        </ApolloProvider>
-      </UserContext.Provider>
-    </GoogleOAuthProvider>
+        </UserContext.Provider>
+      </GoogleOAuthProvider>
+    </ApolloProvider>
   );
 };

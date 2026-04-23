@@ -7,7 +7,7 @@ type CreareOrGetUserResponse = {
   createUserIfNotExists: UserEntityModel
 } | null | undefined;
 
-const createOrGetMutation = gql`
+const CREATE_OR_GET_USER = gql`
   mutation CreateOrGetUser {
     createUserIfNotExists {
       ... on User {
@@ -33,7 +33,7 @@ export default function useCreateUserIfNotExists(
   error: ErrorLike | undefined,
   data: CreareOrGetUserResponse
 } {
-  const [createOrGetUser, { loading, data, error }] = useMutation<CreareOrGetUserResponse>(createOrGetMutation, {
+  const [createOrGetUser, { loading, data, error }] = useMutation<CreareOrGetUserResponse>(CREATE_OR_GET_USER, {
     context: {
       headers: {
         'X-Google-Access-Token': googleAccessToken
