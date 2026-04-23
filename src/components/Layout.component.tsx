@@ -1,35 +1,30 @@
-import { Outlet } from 'react-router-dom';
+import useGetUserByUserToken from '../hook/useGetUserByUserToken.hook';
 import NavBar from './NavBar.component';
-import { ApolloProvider } from '@apollo/client/react';
-import { clientService } from '../service/client.service';
-import { UserContext } from '../state/UserContext';
-import { useContext, useState } from 'react';
 import UserBar from './UserBar.component';
+import { Outlet } from 'react-router-dom';
+import { useContext, useState } from 'react';
+import { UserContext } from '../state/UserContext';
 import { UserEntityModel } from '@my-books/core';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 
 export default function Layout() {
   const userContext = useContext(UserContext);
   const [user, setUserState] = useState<UserEntityModel | null>(userContext);
+  useGetUserByUserToken(user, setUserState);
 
   return (
-    <ApolloProvider client={clientService}>
-      <GoogleOAuthProvider clientId={'193354855911-bi08a0fq7dob3jh6asgg06a93d4l1ser.apps.googleusercontent.com'}>
-        <UserContext.Provider value={user}>
-          <div>
-            <header>
-              <UserBar user={user} setUserState={setUserState} />
-            </header>
-            <main>
-              <NavBar></NavBar>
-              <Outlet />
-            </main>
-            <footer>
-              <p>&copy; 2026 My App</p>
-            </footer>
-          </div>
-        </UserContext.Provider>
-      </GoogleOAuthProvider>
-    </ApolloProvider>
-  );
-};
+    <UserContext.Provider value={user}>
+      <div>
+        <header>
+          <UserBar setUserState={setUserState} />
+        </header>
+        <main>
+          <NavBar></NavBar>
+          <Outlet />
+        </main>
+        <footer>
+          <p>&copy; 2026 My App</p>
+        </footer>
+      </div>
+    </UserContext.Provider>
+  )
+}

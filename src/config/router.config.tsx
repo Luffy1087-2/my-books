@@ -1,5 +1,5 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom'
 import Layout from '../components/Layout.component';
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 
 export const router = createBrowserRouter([
   {
@@ -21,4 +21,3 @@ export const router = createBrowserRouter([
   },
   { path: '*', element: (<Navigate to={'/books'} replace />) }
 ]);
-

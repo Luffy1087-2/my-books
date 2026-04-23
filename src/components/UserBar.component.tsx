@@ -1,12 +1,12 @@
 import { UserEntityModel } from '@my-books/core';
 import { SSOGoogleLoginButton } from './SSOGoogleLoginButton';
-import useGetUserByUserToken from '../hook/useGetUserByUserToken.hook';
+import { useContext } from 'react';
+import { UserContext } from '../state/UserContext';
 
-export default function UserBar({ user, setUserState }: {
-  user: UserEntityModel | null,
+export default function UserBar({ setUserState }: {
   setUserState: (sessionData: UserEntityModel | null) => void
 }) {
-  useGetUserByUserToken(user, setUserState); // Create App Component and call it inside
+  const user = useContext(UserContext);
 
   return (
     <div>
