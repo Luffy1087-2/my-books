@@ -26,7 +26,7 @@ const createOrGetMutation = gql`
 `;
 
 export default function useCreateUserIfNotExists(
-  jwtGoogleToken: string | null,
+  googleAccessToken: string | null,
   setUserState: (user: UserEntityModel) => void
 ): {
   loading: boolean,
@@ -36,7 +36,7 @@ export default function useCreateUserIfNotExists(
   const [createOrGetUser, { loading, data, error }] = useMutation<CreareOrGetUserResponse>(createOrGetMutation, {
     context: {
       headers: {
-        'X-Jwt-Google-Auth-Token': jwtGoogleToken
+        'X-Google-Access-Token': googleAccessToken
       },
     },
     variables: {
@@ -44,10 +44,10 @@ export default function useCreateUserIfNotExists(
   });
 
   useEffect(() => {
-    if (!jwtGoogleToken) return;
+    if (!googleAccessToken) return;
     createOrGetUser();
   },
-    [jwtGoogleToken, createOrGetUser]
+    [googleAccessToken, createOrGetUser]
   );
 
   useEffect(() => {
