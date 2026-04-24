@@ -1,6 +1,6 @@
 # Create react web app with typescipt
 
- npx create-react-app {myApp} --template typescript
+ npm create vite@latest
 
 ## Backup postgreSQL tables
 
