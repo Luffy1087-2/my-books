@@ -17,11 +17,15 @@ export default function Layout() {
         <header>
           <UserBar setUserState={setUserState} />
         </header>
-        <main>
-          <NavBar></NavBar>
-          <Outlet />
+        <main className='flex flex-row items-start my-0 gap-3'>
+          <div className='h-screen'>
+            <NavBar />
+          </div>
+          <div className='content w-full text-center pt-2'>
+            <Outlet />
+          </div>
         </main>
-        <footer>
+        <footer className='fixed bottom-0 right-0 mr-2'>
           <p>&copy; 2026 My App</p>
         </footer>
       </div>

@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS public.books (
     title text NOT NULL,
     author text NOT NULL,
     description text NOT NULL,
+    category text NOT NULL,
     image bytea,
     "userId" bigint REFERENCES public.users(id)
 );

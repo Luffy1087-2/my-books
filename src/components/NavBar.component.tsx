@@ -6,13 +6,15 @@ export default function NavBar() {
   const user = useContext(UserContext);
 
   return (
-    <ul>
-      <li className='bg-red-500 text-2xl'>
-        <Link to={"/books"}>Books</Link>
-      </li>
-      <li className='bg-green-700 text-2xl' style={{ display: user ? 'list-item' : 'none' }}>
-        <Link to={"/add-new-book"}>Add new book</Link>
-      </li>
-    </ul>
+    <div className=" bg-gray-100 p-4 flex flex-col gap-2 mt-1 w-60 h-full">
+      <button className="bg-slate-500 hover:bg-slate-700 text-white text-xl font-semibold rounded-lg shadow-md transition-all duration-200 w-full border border-slate-700 hover:shadow-lg">
+        <Link to="/books" className="block w-full h-full">Books</Link>
+      </button>
+      {user && (
+        <button className="bg-slate-500 hover:bg-slate-600 text-white text-xl font-semibold rounded-lg shadow-md transition-all duration-200 w-full border border-slate-600 hover:shadow-lg">
+          <Link to="/add-new-book" className="block w-full h-full">New book</Link>
+        </button>
+      )}
+    </div>
   );
 }
