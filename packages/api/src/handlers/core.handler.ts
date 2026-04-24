@@ -6,7 +6,7 @@ import { userDtoToGoogleUserModel } from '../map/user-api.map.js';
 
 export async function tryGetGoogleUserModelByAccessToken(accessToken: string | string[] | undefined) {
   if (typeof accessToken !== 'string' || !accessToken.length) throw new TypeError('accessToken is not valid');
-  const res = await fetch('https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses', {
+  const res = await fetch('https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses,photos', {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${accessToken}`,

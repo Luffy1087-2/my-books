@@ -58,7 +58,7 @@ export default class SelectQueryBuilder {
   private getFieldsOrSubQuery(fieldsOrSubQuery: string[] | QuerySelect[] | undefined): string {
     if (!fieldsOrSubQuery) throw new TypeError('rQuery should not be empty');
     if (fieldsOrSubQuery.every((v) => typeof v === 'string'))
-      return fieldsOrSubQuery.reduce((p: string, c: string) => p = p.concat(c, ','), '').slice(0, -1);
+      return fieldsOrSubQuery.reduce((p: string, c: string) => p = p.concat(`${c}`, ','), '').slice(0, -1);
 
     return '( ' + this.build(fieldsOrSubQuery[0] as QuerySelect) + ' ) ';
   }
@@ -66,21 +66,21 @@ export default class SelectQueryBuilder {
   private buildWhere(query: QuerySelect): string {
     let where = 'WHERE';
     for (let i = 0; i < query.where.length; i++) {
-      const whereModel = query.where[i];
-      where = where.concat(' ', this.getOperandOrSubQuery(whereModel.lOperand, whereModel.operandsQuotes[0]));
+      const whereModel: WhereCondition = query.where[i];
+      where = where.concat(' ', this.getOperandOrSubQuery(whereModel.lOperand));
       where = where.concat(' ', whereModel.operator);
-      where = where.concat(' ', this.getOperandOrSubQuery(whereModel.rOperand, whereModel.operandsQuotes[1]));
+      where = where.concat(' ', this.getOperandOrSubQuery(whereModel.rOperand));
       if (!whereModel.rLogicOperand || whereModel.rLogicOperand && query.where[i + 1]) continue;
       where = where.concat(' ', whereModel.rLogicOperand);
     }
     return where;
   }
 
-  private getOperandOrSubQuery(where: string | number | QuerySelect, hasQuotes: boolean): string {
+  private getOperandOrSubQuery(where: string | number | QuerySelect): string {
     if (!Array.isArray(where) && typeof where === 'object')
       return `( ${this.build(where)}) `;
     if (typeof where === 'number' || typeof where === 'string')
-      return hasQuotes ? `'${where.toString()}'` : where.toString();
+      return where.toString();
     throw new TypeError('operand should be a string or an object');
   }
 

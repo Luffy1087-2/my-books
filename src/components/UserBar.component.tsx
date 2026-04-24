@@ -9,9 +9,24 @@ export default function UserBar({ setUserState }: {
   const user = useContext(UserContext);
 
   return (
-    <div>
-      {!sessionStorage.getItem('userToken') && <SSOGoogleLoginButton setUserState={setUserState} />}
-      {user && <h1>Hi {user.name}</h1>}
+    <div className="flex items-center justify-center p-4 bg-gray-100 rounded-lg shadow-md">
+      {!sessionStorage.getItem('userToken') && (
+        <SSOGoogleLoginButton
+          setUserState={setUserState}
+        />
+      )}
+      {user && (
+        <div className="flex items-center space-x-4">
+          <img
+            src={user.avatarUrl}
+            alt="Avatar"
+            className="w-10 h-10 rounded-full"
+          />
+          <h1 className="text-xl font-semibold text-gray-800">
+            Ciao, {user.name}!
+          </h1>
+        </div>
+      )}
     </div>
   );
 }

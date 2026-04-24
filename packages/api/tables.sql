@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS public.users (
     "gId" text NOT NULL,
     name text NOT NULL,
     email text NOT NULL,
+    "avatarUrl" text NOT NULL,
     u_role integer CHECK (u_role IN (1, 2))
 );
 

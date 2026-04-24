@@ -5,7 +5,7 @@ import { createUserIfNotExists, tryGetUserEntityById } from '../handlers/users.h
 
 export const resolvers = {
   Query: {
-    async getUserByUserToken(parant: any, args: any, context: ContextData) {
+    async getUserByUserToken(parant: any, args: any, context: ContextData): Promise<UserEntityModel | ErrorResponse> {
       return await tryGetUserEntityById(context.user?.id.toString() ?? '');
     }
   },

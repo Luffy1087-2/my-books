@@ -15,6 +15,7 @@ const GET_USER_BY_USER_TOKEN = gql`
         id
         gId
         name
+        avatarUrl
         role
       }
       ... on ErrorResponse {

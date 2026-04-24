@@ -31,9 +31,9 @@ async function isUsersTableEmpty(): Promise<boolean> {
 async function insertUser(user: GoogleUserModel, isAdmin: boolean): Promise<UserEntityModel> {
   try {
     const query = new InsertQueryBuilder('users')
-      .withFields('gId', 'name', 'email', 'u_role')
-      .withValues(user.sub, user.given_name, user.email, Number(isAdmin))
-      .withReturning('id', 'gId', 'name', 'email', 'u_role')
+      .withFields('"gId"', 'name', 'email', '"avatarUrl"', 'u_role')
+      .withValues(user.sub, user.given_name, user.email, user.avatarUrl, Number(isAdmin))
+      .withReturning('id', '"gId"', 'name', 'email', '"avatarUrl"', 'u_role')
       .build();
     const data = await DbService.query(query);
     const row = data.rows[0] as DBUser;
@@ -65,12 +65,11 @@ async function createUserIfNotExists(contextData: ContextData): Promise<UserEnti
 async function tryGetUserByGoogleId(gId: string, contextData: ContextData) {
   const query = new SelectQueryBuilder('users');
   const select = query
-    .withFields('id', '"gId"', 'name', 'email', 'u_role')
+    .withFields('id', '"gId"', 'name', 'email', '"avatarUrl"', 'u_role')
     .withWhere({
       lOperand: '"gId"',
       operator: '=',
-      rOperand: gId,
-      operandsQuotes: [false, true]
+      rOperand: `'${gId}'`,
     })
     .build();
   const data = await DbService.query(select);
@@ -85,12 +84,11 @@ async function tryGetUserByGoogleId(gId: string, contextData: ContextData) {
 async function tryGetUserEntityById(id: string) {
   const query = new SelectQueryBuilder('users');
   const select = query
-    .withFields('id', '"gId"', 'name', 'email', 'u_role')
+    .withFields('id', '"gId"', 'name', 'email', '"avatarUrl"', 'u_role')
     .withWhere({
-      lOperand: 'id',
+      lOperand: '"id"',
       operator: '=',
       rOperand: id,
-      operandsQuotes: [false, true]
     })
     .build();
   const data = await DbService.query(select);

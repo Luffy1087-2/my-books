@@ -3,6 +3,7 @@ export type GoogleUserModel = {
   family_name: string;
   given_name: string;
   email: string;
+  avatarUrl: string,
   email_verified: boolean;
 };
 
@@ -11,6 +12,7 @@ export type UserEntityModel = {
   gId: string,
   name: string,
   email: string,
+  avatarUrl: string,
   role: 'admin' | 'user'
 } & ErrorResponse;
 

@@ -38,6 +38,7 @@ const addTypes = () => {
       gId: { type: 'String', isMandatory: true },
       name: { type: 'String', isMandatory: true },
       email: { type: 'String', isMandatory: true },
+      avatarUrl: { type: 'String', isMandatory: true },
       role: { type: 'String', isMandatory: true }
     }
   });

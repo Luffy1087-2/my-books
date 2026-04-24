@@ -9,6 +9,7 @@ export function dbUserToUserEntityModel(dbUser: DBUser, overrideRole: 1 | 2 | un
     gId: dbUser.gId,
     name: dbUser.name,
     email: dbUser.email,
+    avatarUrl: dbUser.avatarUrl,
     role
   };
 }

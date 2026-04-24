@@ -3,6 +3,7 @@ import { GoogleUserModel } from '@my-books/core';
 type UserModelDto = {
   emailAddresses: [{ value: string, metadata: { source: { id: string }, verified: boolean } }]
   names: [{ givenName: string, familyName: string }],
+  photos: [{ url: string }]
 };
 
 export function userDtoToGoogleUserModel(userDto: UserModelDto): GoogleUserModel {
@@ -16,12 +17,16 @@ export function userDtoToGoogleUserModel(userDto: UserModelDto): GoogleUserModel
   if (!nameDto) throw new TypeError('nameDto is not valid');
   const givenName = nameDto.givenName;
   const familyName = nameDto.familyName;
+  const photoDto = userDto.photos[0];
+  if (!photoDto) throw new TypeError('photoDto is not valid');
+  const avatarUrl = photoDto.url;
 
   return {
     email,
     email_verified: isEmailVerified,
     family_name: familyName,
     given_name: givenName,
-    sub: gId
+    sub: gId,
+    avatarUrl
   };
 }

@@ -3,6 +3,7 @@ export type DBUser = {
   name: string,
   email: string,
   gId: string,
+  avatarUrl: string,
   u_role: 1 | 2
 }
 

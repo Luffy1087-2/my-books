@@ -36,7 +36,7 @@ export default class InsertQueryBuilder {
     const select = 'INSERT INTO'
       .concat(' ', this.query.table)
       .concat(' ( ', fieldsString, ' )')
-      .concat(' VALUES (', arrayToQueryValues(this.query.values, true), ' )')
+      .concat(' VALUES (', arrayToQueryValues(this.query.values), ' )')
       .concat(' RETURNING ', arrayToQueryValues(this.query.returning))
     return select;
   }

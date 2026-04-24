@@ -15,7 +15,6 @@ export type OrderBy = { field: string, direction: 'ASC' | 'DESC' };
 export type WhereCondition = {
   lOperand: string | number | QuerySelect,
   rOperand: string | number | QuerySelect,
-  operandsQuotes: [boolean, boolean],
   operator: DBOperator,
   rLogicOperand?: string,
 };
