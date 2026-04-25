@@ -9,7 +9,7 @@ export default function UserBar({ setUserState }: {
   const user = useContext(UserContext);
 
   return (
-    <div className="userBar flex items-center justify-end p-4 bg-gray-100 rounded-lg shadow-md">
+    <div className="flex items-center justify-end p-4 bg-gray-100 rounded-lg shadow-md">
       {!sessionStorage.getItem('userToken') && (
         <SSOGoogleLoginButton
           setUserState={setUserState}

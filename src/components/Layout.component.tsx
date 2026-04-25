@@ -13,12 +13,12 @@ export default function Layout() {
 
   return (
     <UserContext.Provider value={user}>
-      <div>
+      <div className='min-h-screen flex flex-col'>
         <header>
           <UserBar setUserState={setUserState} />
         </header>
-        <main className='flex flex-row items-start my-0 gap-3'>
-          <div className='h-screen'>
+        <main className='flex flex-1 flex-row my-0 gap-3'>
+          <div className='flex'>
             <NavBar />
           </div>
           <div className='content w-full text-center pt-2'>
@@ -26,7 +26,7 @@ export default function Layout() {
           </div>
         </main>
         <footer className='fixed bottom-0 right-0 mr-2'>
-          <p>&copy; 2026 My App</p>
+          <p>&copy; 2026 My Books</p>
         </footer>
       </div>
     </UserContext.Provider>
