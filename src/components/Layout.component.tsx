@@ -17,18 +17,19 @@ export default function Layout() {
         <header>
           <UserBar setUserState={setUserState} />
         </header>
-        <main className='flex flex-1 flex-row my-0 gap-3'>
+        <main className='flex flex-1 flex-row my-0'>
           <div className='flex'>
-            <NavBar />
+            <NavBar className='bg-gray-100 p-4 flex flex-1 flex-col gap-2 mt-1 w-60' />
           </div>
-          <div className='content w-full text-center pt-2'>
+          <div className='content w-8/12 text-center mt-1.5 mx-auto'>
+            <div className="flex flex-row bg-[url('../../public/images/shelf2.jpg')] bg-size-[100%_100%] h-50 w-full"></div>
             <Outlet />
           </div>
         </main>
         <footer className='fixed bottom-0 right-0 mr-2'>
           <p>&copy; 2026 My Books</p>
         </footer>
-      </div>
-    </UserContext.Provider>
+      </div >
+    </UserContext.Provider >
   )
 }

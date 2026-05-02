@@ -67,7 +67,7 @@ export const addBook = async (
       author,
       description,
       imageBuffer,
-      id // sub
+      id
     ]);
     return book.rows[0];
   } catch (e: any) {
